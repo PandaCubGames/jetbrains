@@ -14,7 +14,8 @@
     "selectionInactiveBackground": "#4e5a82",
     "borderColor": "#282a36",
     "separatorColor": "#5d5e66",
-    "editorBackground": "#282a36"
+    "editorBackground": "#282a36",
+    "controlBorderColor": "#4b506a"
   },
   "ui": {
     "*": {
@@ -24,8 +25,10 @@
       "textForeground": "primaryForeground",
       "caretForeground": "primaryForeground",
       "selectionForeground": "primaryForeground",
+      "selectionForegroundInactive": "primaryForeground",
       "selectionInactiveForeground": "primaryForeground",
       "selectionBackground": "selectionBackground",
+      "selectionBackgroundInactive": "selectionInactiveBackground",
       "selectionInactiveBackground": "selectionInactiveBackground",
       "inactiveBackground": "primaryBackground",
       "disabledBackground": "primaryBackground",

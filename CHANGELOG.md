@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.1
+
+- Simplify install and update notifications with shorter text and styling that follows the IDE theme and font settings
+- Fix Reworked terminal colors in Dracula, Dracula Colorful and Alucard, including their Islands variants, so ANSI colors and default text/background colors follow the selected theme [#115](https://github.com/dracula/jetbrains/issues/115)
+- Give Dracula and Dracula Colorful consistent panel backgrounds that remain distinct from the darker editor
+- Make focused and inactive selections easier to see, with a separate, subtler hover highlight
+- Keep button borders and progress tracks subtle while improving selection contrast
+
 ## 2.3.0
 
 - Alucard now colors Go, Python, Ruby, Objective-C, CSS, JavaScript, TypeScript, Kotlin, Markdown and regular expressions with the Alucard palette, instead of falling back to generic light-theme colors
