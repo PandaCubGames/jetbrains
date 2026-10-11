@@ -1,0 +1,87 @@
+name: Sync upstream Dracula
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-upstream-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Test the merge helper
+        run: python3 -B -m unittest discover -s .github/scripts -p 'test_*.py' -v
+
+      - name: Fetch the original repository
+        run: |
+          git remote add upstream https://github.com/dracula/jetbrains.git
+          git fetch --no-tags upstream master
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Merge upstream and preserve custom colors
+        id: merge
+        run: python3 .github/scripts/sync_upstream.py upstream/master
+
+      - name: Set up JDK 21
+        if: steps.merge.outputs.changed == 'true'
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: temurin
+
+      - name: Setup Gradle
+        if: steps.merge.outputs.changed == 'true'
+        uses: gradle/actions/setup-gradle@v5
+
+      # GITHUB_TOKEN pushes do not trigger the normal push workflow. Validate
+      # this candidate here, before updating main, without publishing tags.
+      - name: Build and verify the merged plugin
+        if: steps.merge.outputs.changed == 'true'
+        run: |
+          chmod +x gradlew
+          ./gradlew buildPlugin verifyPlugin
+
+      - name: Upload the verified plugin
+        if: steps.merge.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: synced-plugin
+          path: build/distributions/*.zip
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Update main
+        if: steps.merge.outputs.changed == 'true'
+        run: git push origin HEAD:refs/heads/main
+
+      - name: Summarize the result
+        if: success()
+        env:
+          CHANGED: ${{ steps.merge.outputs.changed }}
+        run: |
+          if [ "$CHANGED" = true ]; then
+            echo 'Merged the latest dracula/jetbrains changes into main after building and verifying the plugin. Existing dark UI colors were preserved.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'main already contains the latest dracula/jetbrains changes.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Report a stopped update
+        if: failure()
+        run: echo 'The update was stopped. main was not updated by a failed merge or validation. See the failed step for details.' >> "$GITHUB_STEP_SUMMARY"
