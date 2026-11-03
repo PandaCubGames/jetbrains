@@ -67,7 +67,7 @@ jobs:
       # here, before and after the push respectively.
       - name: Build and verify merged plugin
         if: steps.release.outputs.needed == 'true'
-        run: bash ./gradlew --no-daemon buildPlugin verifyPlugin
+        run: bash ./gradlew --no-daemon buildPlugin test verifyPlugin
       - uses: actions/upload-artifact@v7
         if: steps.release.outputs.needed == 'true'
         with:
