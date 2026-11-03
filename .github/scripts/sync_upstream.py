@@ -30,14 +30,40 @@ def recolor(text, colors):
     return text
 
 
+def ui_settings(text, prefix=()):
+    """Flatten a theme's ui block into {("Button", "startBorderColor"): value}."""
+    node = json.loads(text)["ui"] if not prefix else text
+    flat = {}
+    for key, value in node.items():
+        if isinstance(value, dict):
+            flat.update(ui_settings(value, prefix + (key,)))
+        else:
+            flat[prefix + (key,)] = value
+    return flat
+
+
+def moved_colors(ours_text, merged_text):
+    """Existing ui settings whose use of the preserved tokens would change.
+
+    Keeping the six token values is not enough: if upstream points a setting
+    at a different token, the custom color silently stops applying there.
+    New upstream settings are allowed, including ones that use the tokens.
+    """
+    ours, merged = ui_settings(ours_text), ui_settings(merged_text)
+    return [f"{'.'.join(key)}: {value} -> {merged.get(key, '(removed)')}"
+            for key, value in ours.items()
+            if (value in TOKENS or merged.get(key) in TOKENS) and merged.get(key) != value]
+
+
 def sync(ref):
     if git("status", "--porcelain").stdout.strip():
         raise RuntimeError("Sync requires a clean checkout")
     if git("merge-base", "--is-ancestor", ref, "HEAD", check=False).returncode == 0:
         return False
-    palettes = {}
+    palettes, originals = {}, {}
     for path in THEMES:
-        colors = json.loads(Path(path).read_text())["colors"]
+        originals[path] = Path(path).read_text()
+        colors = json.loads(originals[path])["colors"]
         palettes[path] = {key: colors[key] for key in TOKENS}
     protected = [p for p in AUTOMATION if Path(p).exists()]
     result = git("merge", "--no-commit", "--no-ff", ref, check=False)
@@ -71,6 +97,11 @@ def sync(ref):
         for path, colors in palettes.items():
             Path(path).write_text(recolor(Path(path).read_text(), colors))
             git("add", "--", path)
+        moved = [f"{path}: {change}" for path in palettes
+                 for change in moved_colors(originals[path], Path(path).read_text())]
+        if moved:
+            raise RuntimeError("Upstream changes where the custom colors are used; "
+                               "review manually:\n" + "\n".join(moved))
         git("commit", "-m", "Merge upstream Dracula updates, preserving fork customizations")
     except Exception:
         git("merge", "--abort", check=False)
@@ -79,7 +110,15 @@ def sync(ref):
 
 
 if __name__ == "__main__":
-    changed = sync(sys.argv[1])
+    try:
+        changed = sync(sys.argv[1])
+    except RuntimeError as error:
+        # Surface why the sync stopped on the run page, not only in the log.
+        if os.environ.get("GITHUB_STEP_SUMMARY"):
+            with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+                summary.write("## Upstream sync stopped\n\nThe default branch was not changed.\n\n"
+                              f"```\n{error}\n```\n")
+        raise
     if os.environ.get("GITHUB_OUTPUT"):
         with open(os.environ["GITHUB_OUTPUT"], "a") as output:
             output.write(f"changed={str(changed).lower()}\n")
