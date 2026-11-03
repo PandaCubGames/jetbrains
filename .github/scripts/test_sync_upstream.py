@@ -21,7 +21,8 @@ class SyncTest(unittest.TestCase):
         for path in THEMES:
             Path(path).parent.mkdir(parents=True, exist_ok=True)
             Path(path).write_text(json.dumps({'colors': {k: '#000000' for k in TOKENS},
-                                             'ui': {'other': 'base'}}, indent=2) + '\n')
+                                             'ui': {'other': 'base',
+                                                    '*': {'background': 'primaryBackground'}}}, indent=2) + '\n')
         for path in AUTOMATION:
             Path(path).parent.mkdir(parents=True, exist_ok=True)
             Path(path).write_text('base\n')
@@ -82,6 +83,32 @@ class SyncTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'clean checkout'):
             sync('upstream')
         self.assertEqual(Path('other.txt').read_text(), 'unsaved work\n')
+
+    def test_upstream_new_settings_may_use_custom_colors(self):
+        self.upstream_change()
+        self.git('checkout', 'upstream')
+        for path in THEMES:
+            Path(path).write_text(Path(path).read_text().replace(
+                '"other": "upstream"', '"other": "upstream",\n    "added": "selectionBackground"'))
+        self.commit('upstream feature')
+        self.git('checkout', 'fork')
+        self.assertTrue(sync('upstream'))
+        self.assertEqual(json.loads(Path(THEMES[0]).read_text())['ui']['added'],
+                         'selectionBackground')
+
+    def test_repointing_a_custom_color_stops_for_review(self):
+        self.upstream_change()
+        self.git('checkout', 'upstream')
+        for path in THEMES:
+            Path(path).write_text(Path(path).read_text().replace(
+                '"background": "primaryBackground"', '"background": "secondaryBackground"'))
+        self.commit('upstream re-points panel background')
+        self.git('checkout', 'fork')
+        head = self.git('rev-parse', 'HEAD')
+        with self.assertRaisesRegex(RuntimeError, r'\*\.background: primaryBackground -> secondaryBackground'):
+            sync('upstream')
+        self.assertEqual(self.git('rev-parse', 'HEAD'), head)
+        self.assertEqual(self.git('status', '--porcelain'), '')
 
     def test_non_color_theme_conflict_aborts(self):
         self.upstream_change()
