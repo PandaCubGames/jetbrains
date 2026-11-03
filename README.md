@@ -34,6 +34,12 @@ notes for the PandaCub branding changes.
 The classic and Islands dark variants intentionally share display names. The three
 shared editor color schemes are `pandracula`, `pandracula colorful`, and `pandracula alucub`.
 
+All six themes use scheme-specific **JetBrains Mono**, size **19.2** at 100% IDE
+scale, line height **1.2**, and ligatures disabled, with no explicit fallback font.
+Font size follows the IDE's font scaling. Existing customized scheme copies can
+retain their saved settings; select a bundled scheme or reset its font settings
+to use these defaults.
+
 ## Development
 
 Use JDK 21 and the Gradle wrapper from the repository root. The build targets
