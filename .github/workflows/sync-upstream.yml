@@ -21,6 +21,8 @@ jobs:
       contents: write
     env:
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
     steps:
       - name: Check out the fork's default branch
         uses: actions/checkout@v7
@@ -35,21 +37,35 @@ jobs:
           git fetch --no-tags upstream master
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-      - name: Merge upstream and preserve custom colors
+      # A stopped merge leaves the branch untouched. The current branch is
+      # still released if needed; the job is failed at the end so it gets noticed.
+      - name: Merge upstream and preserve fork customizations
         id: merge
+        continue-on-error: true
         run: python3 .github/scripts/sync_upstream.py upstream/master
-      - name: Check whether this commit needs a release
+      - name: Check fork customizations
+        run: python3 .github/scripts/sync_upstream.py --check
+      - name: Decide whether to release
         id: release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
         run: |
-          tag="build-$(git rev-parse HEAD)"
-          if gh release view "$tag" >/dev/null 2>&1; then
-            echo 'needed=false' >> "$GITHUB_OUTPUT"
+          head=$(git rev-parse HEAD)
+          echo "commit=$head" >> "$GITHUB_OUTPUT"
+          echo "version=$(python3 .github/scripts/sync_upstream.py --version)" >> "$GITHUB_OUTPUT"
+          needed=true
+          if gh release view "build-$head" >/dev/null 2>&1; then
+            needed=false
           else
-            echo 'needed=true' >> "$GITHUB_OUTPUT"
+            # Skip upstream changes that do not affect the plugin, such as docs.
+            last=$(gh release list --exclude-drafts --limit 50 --json tagName \
+              --jq '[.[].tagName | select(startswith("build-"))][0] // ""')
+            last=${last#build-}
+            if [ -n "$last" ] && git cat-file -e "$last^{commit}" 2>/dev/null &&
+               git diff --quiet "$last" HEAD -- src build.gradle.kts gradle.properties settings.gradle.kts gradle; then
+              needed=false
+              echo "No plugin changes since the release of $last."
+            fi
           fi
+          echo "needed=$needed" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-java@v5
         if: steps.release.outputs.needed == 'true'
         with:
@@ -61,30 +77,57 @@ jobs:
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup
           sudo rm -rf /opt/hostedtoolcache/CodeQL
           df -h /
+      # v5 retains the MIT-licensed caching implementation.
       - uses: gradle/actions/setup-gradle@v5
         if: steps.release.outputs.needed == 'true'
-      # GITHUB_TOKEN pushes do not trigger push workflows. Validate and release
-      # here, before and after the push respectively.
-      - name: Build and verify merged plugin
+      # GITHUB_TOKEN pushes do not trigger push workflows, so the merged
+      # candidate is verified here before the branch is updated.
+      - name: Build and verify plugin
         if: steps.release.outputs.needed == 'true'
-        run: bash ./gradlew --no-daemon buildPlugin verifyPlugin
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: bash ./gradlew --no-daemon buildPlugin verifyPlugin -PpluginVersion="$VERSION"
       - uses: actions/upload-artifact@v7
         if: steps.release.outputs.needed == 'true'
         with:
-          name: synced-plugin
+          name: plugin-${{ steps.release.outputs.version }}
           path: build/distributions/*.zip
           if-no-files-found: error
           retention-days: 30
       - name: Update default branch
         if: steps.merge.outputs.changed == 'true'
         run: git push origin "HEAD:refs/heads/$DEFAULT_BRANCH"
-      - name: Release the verified build
+      - name: Create GitHub release
+        id: github_release
         if: steps.release.outputs.needed == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
+          COMMIT: ${{ steps.release.outputs.commit }}
+          VERSION: ${{ steps.release.outputs.version }}
         run: |
-          commit=$(git rev-parse HEAD)
-          tag="build-${commit}"
-          gh release create "$tag" build/distributions/*.zip --target "$commit" \
-            --title "Dracula fork — $tag" --generate-notes
+          gh release create "build-$COMMIT" build/distributions/*.zip --target "$COMMIT" \
+            --title "Pandacub Dracula $VERSION" --generate-notes
+      # Same job and inputs as the verified build, so Gradle reuses that ZIP.
+      - name: Publish to JetBrains Marketplace
+        if: steps.release.outputs.needed == 'true'
+        env:
+          JETBRAINS_TOKEN: ${{ secrets.JETBRAINS_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if [ -z "$JETBRAINS_TOKEN" ]; then
+            echo "::warning::JETBRAINS_TOKEN is not set, so $VERSION was not published to the Marketplace."
+            exit 0
+          fi
+          bash ./gradlew --no-daemon publishPlugin -PpluginVersion="$VERSION"
+          echo "Published $VERSION to the JetBrains Marketplace." >> "$GITHUB_STEP_SUMMARY"
+      # The GitHub release marks a version as done. Remove it when publishing
+      # fails, so rerunning this workflow retries the whole release.
+      - name: Withdraw GitHub release after a failed publish
+        if: failure() && steps.github_release.outcome == 'success'
+        env:
+          COMMIT: ${{ steps.release.outputs.commit }}
+        run: gh release delete "build-$COMMIT" --cleanup-tag --yes
+      - name: Fail when the upstream merge stopped
+        if: steps.merge.outcome == 'failure'
+        run: |
+          echo "::error::The upstream merge stopped for manual review; see the run summary."
+          exit 1

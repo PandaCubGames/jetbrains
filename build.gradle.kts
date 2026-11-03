@@ -38,39 +38,19 @@ changelog {
 
 val pluginDescription = """
     <div>
-      <p>Dracula Theme for JetBrains</p>
-      <h2>Install</h2>
       <p>
-        All instructions can be found at
-        <a href="https://draculatheme.com/jetbrains">draculatheme.com/jetbrains</a>.
-      </p>
-      <h2>Dracula PRO</h2>
-      <p>
-        <a href="https://gumroad.com/a/477820019">
-          <img
-            alt="Dracula Pro"
-            src="https://raw.githubusercontent.com/dracula/jetbrains/master/docs/screenshots/dracula-pro.png"
-          />
-        </a>
+        Pandacub Dracula is a fork of the
+        <a href="https://github.com/dracula/jetbrains">Dracula theme for JetBrains IDEs</a>.
+        It keeps the earlier interface colors of the dark variants and follows every
+        other upstream improvement.
       </p>
       <p>
-        Dracula PRO is a color scheme and UI theme tailored for programming. Made
-        for terminal emulators, code editors, and syntax highlighters. Designed to
-        be aesthetically pleasing while keeping you focused.
+        Includes Pandacub Dracula, Pandacub Dracula Colorful and Pandacub Dracula Alucard, each
+        also in an Islands version. Not affiliated with the official Dracula Theme.
       </p>
-      <p><a href="https://gumroad.com/a/477820019">Get it now</a></p>
+      <p><a href="https://github.com/PandaCubGames/jetbrains">Source code</a></p>
       <h2>Licence</h2>
-      <p>
-        <a href="https://raw.githubusercontent.com/dracula/jetbrains/master/LICENSE">
-          MIT Licence
-        </a>
-      </p>
-      <h2>Donation</h2>
-      <p>
-        If you like this plugin, you can
-        <a href="https://www.buymeacoffee.com/nszihan">buy me a cup of coffee</a>.
-        Thank you!
-      </p>
+      <p><a href="https://github.com/PandaCubGames/jetbrains/blob/master/LICENSE">MIT Licence</a></p>
     </div>
 """.trimIndent()
 

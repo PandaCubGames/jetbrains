@@ -65,7 +65,7 @@ object DraculaNotification {
     private fun releaseNote() = """
         <div style="${Styles.CONTAINER}">
             <p style="${Styles.PARAGRAPH}">
-                🎉 <strong>Welcome to Dracula Theme v${DraculaMeta.currentVersion}!</strong> Here's what's new in this release:
+                🎉 <strong>Welcome to Pandacub Dracula v${DraculaMeta.currentVersion}!</strong> Here's what's new in this release:
             </p>
             ${whatsNew()}
             <div style="${Styles.INFO_BOX}">
@@ -83,7 +83,7 @@ object DraculaNotification {
     private fun welcomeMessage() = """
         <div style="${Styles.CONTAINER}">
             <p style="${Styles.PARAGRAPH}">
-                🎉 <strong>Welcome to the dark side!</strong> Dracula Theme is now installed and ready to transform your coding experience.
+                🎉 <strong>Welcome to the dark side!</strong> Pandacub Dracula is now installed and ready to transform your coding experience.
             </p>
             <div style="${Styles.INFO_BOX}">
                 <p style="${Styles.INFO_TEXT}">
@@ -91,7 +91,7 @@ object DraculaNotification {
                 </p>
                 <ul style="margin: 8px 0 0 0; padding-left: 16px; color: ${css(Colors.TEXT_PRIMARY)}; font-size: 12px;">
                     <li style="margin: 4px 0;">Go to <span style="${Styles.HIGHLIGHT}">Settings → Appearance & Behavior → Appearance</span></li>
-                    <li style="margin: 4px 0;">Select <span style="${Styles.HIGHLIGHT}">Dracula</span> from the Theme dropdown</li>
+                    <li style="margin: 4px 0;">Select <span style="${Styles.HIGHLIGHT}">Pandacub Dracula</span> from the Theme dropdown</li>
                     <li style="margin: 4px 0;">Restart your IDE for the best experience</li>
                 </ul>
             </div>
@@ -101,21 +101,21 @@ object DraculaNotification {
         </div>
     """.trimIndent()
 
-    private const val NOTIFICATION_GROUP_ID = "Dracula Theme"
+    private const val NOTIFICATION_GROUP_ID = "Pandacub Dracula"
 
     private val notificationIcon = IconLoader.getIcon("/icons/dracula-logo.svg", javaClass)
 
     private const val DRACULA_PRO_LINK = "https://gumroad.com/a/477820019"
-    private const val GITHUB_LINK = "https://github.com/dracula/jetbrains"
+    private const val GITHUB_LINK = "https://github.com/PandaCubGames/jetbrains"
     private const val DONATE_LINK = "https://www.buymeacoffee.com/nszihan"
 
     fun notifyReleaseNote(project: Project) {
-        val title = "🎨 Dracula Theme v${DraculaMeta.currentVersion} - Release Notes"
+        val title = "🎨 Pandacub Dracula v${DraculaMeta.currentVersion} - Release Notes"
         notify(project, title, releaseNote())
     }
 
     fun notifyFirstlyDownloaded(project: Project) {
-        val title = "🧛‍♂️ Dracula Theme Successfully Installed"
+        val title = "🧛‍♂️ Pandacub Dracula Successfully Installed"
         notify(project, title, welcomeMessage())
     }
 
