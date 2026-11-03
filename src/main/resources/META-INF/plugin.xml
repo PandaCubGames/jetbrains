@@ -1,18 +1,18 @@
 <idea-plugin>
-    <id>com.vermouthx.idea</id>
-    <name>Dracula Theme</name>
-    <vendor email="developer@nszihan.com" url="https://draculatheme.com/jetbrains">Dracula Official</vendor>
+    <id>pandacub.games.pandacub-dracula</id>
+    <name>Pandacub Dracula</name>
+    <vendor url="https://github.com/PandaCubGames/jetbrains">PandaCubGames</vendor>
     <depends>com.intellij.modules.lang</depends>
     <idea-version since-build="253"/>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.draculatheme.jetbrains.settings.DraculaSettings"/>
         <postStartupActivity implementation="com.draculatheme.jetbrains.activities.DraculaStartupActivity"/>
-        <notificationGroup displayType="STICKY_BALLOON" id="Dracula Theme" isLogByDefault="true"/>
-        <themeProvider id="371dce76-a3c5-4429-91af-41cf86094744" path="/themes/Dracula.theme.json"/>
-        <themeProvider id="ee2824b3-c1d9-44fa-8b64-de6fe5dd8e37" path="/themes/DraculaColorful.theme.json"/>
-        <themeProvider id="f8c76d9a-2c8d-4e4f-a327-d7b5c1ce6d3e" path="/themes/DraculaAlucard.theme.json"/>
-        <themeProvider id="9a1b2c3d-4e5f-6789-abcd-ef0123456789" path="/themes/IslandsDracula.theme.json"/>
-        <themeProvider id="8b2c3d4e-5f67-89ab-cdef-012345678901" path="/themes/IslandsDraculaColorful.theme.json"/>
-        <themeProvider id="7c3d4e5f-6789-abcd-ef01-234567890abc" path="/themes/IslandsDraculaAlucard.theme.json"/>
+        <notificationGroup displayType="STICKY_BALLOON" id="Pandacub Dracula" isLogByDefault="true"/>
+        <themeProvider id="af6cea4f-67ab-5056-9ed8-b37c5ba2767b" path="/themes/Dracula.theme.json"/>
+        <themeProvider id="3d18abbb-5296-5e73-a158-b636fb625c8a" path="/themes/DraculaColorful.theme.json"/>
+        <themeProvider id="9977b081-e3ce-5e70-9cb0-219cac3bf13e" path="/themes/DraculaAlucard.theme.json"/>
+        <themeProvider id="15c4cb0a-a3bd-54aa-8b76-81614bfc6a59" path="/themes/IslandsDracula.theme.json"/>
+        <themeProvider id="40f8a3fd-0c36-56bb-81a3-5a0f9e7ca4a9" path="/themes/IslandsDraculaColorful.theme.json"/>
+        <themeProvider id="ecf85a40-ff70-54e7-a64b-f85d3f55636e" path="/themes/IslandsDraculaAlucard.theme.json"/>
     </extensions>
 </idea-plugin>
