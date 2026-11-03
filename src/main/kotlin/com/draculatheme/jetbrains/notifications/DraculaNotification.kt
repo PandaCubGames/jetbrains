@@ -103,7 +103,7 @@ object DraculaNotification {
 
     private const val NOTIFICATION_GROUP_ID = "Dracula Theme"
 
-    private val notificationIcon = IconLoader.getIcon("/icons/dracula-logo.svg", javaClass)
+    private val notificationIcon = IconLoader.getIcon("/icons/pandracula-logo.svg", javaClass)
 
     private const val DRACULA_PRO_LINK = "https://gumroad.com/a/477820019"
     private const val GITHUB_LINK = "https://github.com/dracula/jetbrains"
