@@ -38,13 +38,23 @@ changelog {
 
 val pluginDescription = """
     <div>
-      <p>Dracula Theme for JetBrains</p>
-      <h2>Install</h2>
       <p>
-        All instructions can be found at
+        PandaCub Dracula is a fork of the Dracula theme for JetBrains IDEs,
+        maintained by PandaCub Games. It provides customized theme colors and
+        pandracula variants based on the original Dracula themes.
+      </p>
+      <h2>Credits</h2>
+      <p>
+        Based on <a href="https://github.com/dracula/jetbrains">Dracula for JetBrains</a>.
+        Credit for the original themes goes to the Dracula authors and contributors.
+        The following links and donation information belong to the original Dracula project.
+      </p>
+      <h3>Original Dracula Installation Guide</h3>
+      <p>
+        Installation instructions for the original Dracula plugin can be found at
         <a href="https://draculatheme.com/jetbrains">draculatheme.com/jetbrains</a>.
       </p>
-      <h2>Dracula PRO</h2>
+      <h3>Dracula PRO</h3>
       <p>
         <a href="https://gumroad.com/a/477820019">
           <img
@@ -59,16 +69,16 @@ val pluginDescription = """
         be aesthetically pleasing while keeping you focused.
       </p>
       <p><a href="https://gumroad.com/a/477820019">Get it now</a></p>
-      <h2>Licence</h2>
+      <h3>Licence</h3>
       <p>
         <a href="https://raw.githubusercontent.com/dracula/jetbrains/master/LICENSE">
           MIT Licence
         </a>
       </p>
-      <h2>Donation</h2>
+      <h3>Support the Original Dracula Maintainer</h3>
       <p>
-        If you like this plugin, you can
-        <a href="https://www.buymeacoffee.com/nszihan">buy me a cup of coffee</a>.
+        To support the original Dracula for JetBrains maintainer, you can
+        <a href="https://www.buymeacoffee.com/nszihan">buy them a cup of coffee</a>.
         Thank you!
       </p>
     </div>
