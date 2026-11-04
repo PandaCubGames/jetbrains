@@ -53,7 +53,7 @@ object DraculaNotification {
             <h4 style="${Styles.HEADING}">✨ What's New</h4>
             <ul style="margin: 0; padding-left: 18px;">
                 <li style="${Styles.LIST_ITEM}">🐼 First release under the pandracula name, with its own panda vampire icon</li>
-                <li style="${Styles.LIST_ITEM}">🎨 Pick pandracula, pandracula colorful or pandracula alucub — plus their Islands versions</li>
+                <li style="${Styles.LIST_ITEM}">🎨 Pick Pandracula, Pandracula Colorful or Pandracula Alucub — plus their Islands versions</li>
                 <li style="${Styles.LIST_ITEM}">🎨 Customized pandracula colors across the dark themes</li>
                 <li style="${Styles.LIST_ITEM}">✨ Includes every improvement from Dracula for JetBrains 2.3.0</li>
             </ul>
@@ -90,7 +90,7 @@ object DraculaNotification {
                 </p>
                 <ul style="margin: 8px 0 0 0; padding-left: 16px; color: ${css(Colors.TEXT_PRIMARY)}; font-size: 12px;">
                     <li style="margin: 4px 0;">Go to <span style="${Styles.HIGHLIGHT}">Settings → Appearance & Behavior → Appearance</span></li>
-                    <li style="margin: 4px 0;">Select <span style="${Styles.HIGHLIGHT}">pandracula</span> from the Theme dropdown</li>
+                    <li style="margin: 4px 0;">Select <span style="${Styles.HIGHLIGHT}">Pandracula</span> from the Theme dropdown</li>
                     <li style="margin: 4px 0;">Restart your IDE for the best experience</li>
                 </ul>
             </div>
