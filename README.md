@@ -65,8 +65,10 @@ the fork is already up to date; failed release uploads can be retried by rerunni
 Verified ZIPs are attached to [Releases](https://github.com/PandaCubGames/jetbrains/releases)
 with a `build-<commit SHA>` tag. To create a download manually, open
 **Actions → Build and release plugin → Run workflow** and select the branch to build.
-Pushing a `v*` tag also creates a release. Each release uses the ZIP from the verified
-build. Pull requests and ordinary pushes to `master`, `main`, or `release/**` produce
+Merging a `pluginVersion` bump into `master` publishes a `v<version>` release
+and marks it Latest, which is what the release badge above shows. Pushing a `v*`
+tag also creates a release; `build-<commit SHA>` snapshots are never marked Latest.
+Each release uses the ZIP from the verified build. Pull requests and ordinary pushes to `master`, `main`, or `release/**` produce
 downloadable Actions artifacts.
 
 Enable GitHub Actions and scheduled workflows in the fork's **Actions** tab.
