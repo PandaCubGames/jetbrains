@@ -52,10 +52,8 @@ object DraculaNotification {
         <div style="${Styles.CONTAINER}">
             <h4 style="${Styles.HEADING}">✨ What's New</h4>
             <ul style="margin: 0; padding-left: 18px;">
-                <li style="${Styles.LIST_ITEM}">🐼 First release under the pandracula name, with its own panda vampire icon</li>
-                <li style="${Styles.LIST_ITEM}">🎨 Pick Pandracula, Pandracula Colorful or Pandracula Alucub — plus their Islands versions</li>
-                <li style="${Styles.LIST_ITEM}">🎨 Customized pandracula colors across the dark themes</li>
-                <li style="${Styles.LIST_ITEM}">✨ Includes every improvement from Dracula for JetBrains 2.3.0</li>
+                <li style="${Styles.LIST_ITEM}">🎨 Themes are now named Pandracula, Pandracula Colorful and Pandracula Alucub</li>
+                <li style="${Styles.LIST_ITEM}">🏝️ Islands variants are labelled "Islands …", so every entry in the Theme list is easy to tell apart</li>
             </ul>
         </div>
     """.trimIndent()
