@@ -24,15 +24,15 @@ notes for the PandaCub branding changes.
 
 | Variant | Display name |
 | --- | --- |
-| Classic dark | `pandracula` |
-| Colorful dark | `pandracula colorful` |
-| Alucard light | `pandracula alucub` |
-| Islands dark | `pandracula` |
-| Islands colorful dark | `pandracula colorful` |
-| Islands Alucard light | `Islands pandracula alucub` |
+| Classic dark | `Pandracula` |
+| Colorful dark | `Pandracula Colorful` |
+| Alucard light | `Pandracula Alucub` |
+| Islands dark | `Islands Pandracula` |
+| Islands colorful dark | `Islands Pandracula Colorful` |
+| Islands Alucard light | `Islands Pandracula Alucub` |
 
-The classic and Islands dark variants intentionally share display names. The three
-shared editor color schemes are `pandracula`, `pandracula colorful`, and `pandracula alucub`.
+Each Islands variant uses the same editor color scheme as its classic counterpart:
+`Pandracula`, `Pandracula Colorful`, or `Pandracula Alucub`.
 
 ## Development
 

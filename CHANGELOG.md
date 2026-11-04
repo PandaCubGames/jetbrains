@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- Theme names are now Pandracula, Pandracula Colorful and Pandracula Alucub
+- Each Islands variant is labelled "Islands …", so no two entries in the Theme list look the same
+
 ## 1.0.0
 
 - First release under the pandracula name, with its own panda vampire icon
