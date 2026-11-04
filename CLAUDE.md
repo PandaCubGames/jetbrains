@@ -52,12 +52,12 @@ Islands variants share editor scheme XML with their base counterparts via the `e
 
 ### Release workflow
 
-Every push and PR runs `buildPlugin` then `verifyPlugin`. Releases are triggered by pushing any `v*` tag: the release job builds once, attaches that zip to a GitHub Release, and publishes the same zip to the JetBrains Marketplace using the `JETBRAINS_TOKEN` secret.
+Every push and PR runs `buildPlugin` then `verifyPlugin`. A push to `master`/`main` whose `pluginVersion` has no GitHub Release yet publishes `v<pluginVersion>` from the verified zip and marks it Latest (this drives the README release badge). Pushing a `v*` tag also releases. Manual workflow runs and upstream-sync builds publish `build-<sha>` snapshots that are never marked Latest.
 
 To release a new version:
 1. Update `pluginVersion` in `gradle.properties`
-2. Add an entry to `CHANGELOG.md` (the latest section is used as marketplace change notes)
+2. Add an entry to `CHANGELOG.md` (the latest section is used as release change notes)
 3. Update `whatsNew` HTML in `DraculaNotification.kt`
-4. Commit, tag `vX.Y.Z`, and push the tag
+4. Merge into `master`; CI creates the `vX.Y.Z` release
 
 User-facing release notes (`CHANGELOG.md` entries and `whatsNew` HTML) must describe the visible change and the user benefit. Do not mention implementation details — specific UI theme keys, hex values, refactor mechanics, or which canonical recipe was followed. Users see *what improved for them*, not *how it was wired up*.
