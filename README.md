@@ -1,11 +1,11 @@
-# PandaCub Dracula for [JetBrains IDEs](https://www.jetbrains.com/)
+# pandracula for [JetBrains IDEs](https://www.jetbrains.com/)
 
-<img src="./src/main/resources/META-INF/pluginIcon.svg" width="160" height="160" alt="PandaCub Dracula panda vampire logo">
+<img src="./src/main/resources/META-INF/pluginIcon.svg" width="160" height="160" alt="pandracula panda vampire logo">
 
 [![Build Status](https://github.com/PandaCubGames/jetbrains/actions/workflows/build.yml/badge.svg)](https://github.com/PandaCubGames/jetbrains/actions/workflows/build.yml)
 [![Release](https://img.shields.io/github/v/release/PandaCubGames/jetbrains)](https://github.com/PandaCubGames/jetbrains/releases)
 
-PandaCub Dracula is a fork of [Dracula for JetBrains](https://github.com/dracula/jetbrains),
+pandracula is a fork of [Dracula for JetBrains](https://github.com/dracula/jetbrains),
 maintained by [PandaCub Games](https://github.com/PandaCubGames). It provides customized
 UI colors and pandracula variants of the original dark, colorful, Alucard, and Islands themes.
 
@@ -76,7 +76,7 @@ allow the sync job to push to the default branch. These workflows publish to Git
 
 ## Credits
 
-PandaCub Dracula is based on the original [Dracula for JetBrains](https://github.com/dracula/jetbrains).
+pandracula is based on the original [Dracula for JetBrains](https://github.com/dracula/jetbrains).
 Credit for the original themes goes to Zihan Ma and the
 [Dracula contributors](https://github.com/dracula/jetbrains/graphs/contributors).
 The links, promotions, and donation information below refer to the original Dracula project.

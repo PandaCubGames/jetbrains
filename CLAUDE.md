@@ -13,7 +13,7 @@ JETBRAINS_TOKEN=<TOKEN> ./gradlew publishPlugin    # Publish to JetBrains Market
 
 ## Architecture
 
-This is an IntelliJ Platform plugin (plugin ID: `com.vermouthx.idea`) that provides 6 Dracula color theme variants. There is no test suite.
+This is an IntelliJ Platform plugin named **pandracula** (plugin ID: `pandacub.games.pandacub-dracula`), a fork of Dracula for JetBrains that provides 6 color theme variants. There is no test suite.
 
 ### Theme variants
 

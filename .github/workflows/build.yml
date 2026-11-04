@@ -65,5 +65,5 @@ jobs:
             echo "Release $tag already exists."
           else
             gh release create "$tag" dist/*.zip --target "$COMMIT" \
-              --title "Dracula fork — $tag" --generate-notes
+              --title "pandracula — $tag" --generate-notes
           fi
