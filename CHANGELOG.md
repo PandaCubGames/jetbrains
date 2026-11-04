@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0
+
+- First release under the pandracula name, with its own panda vampire icon
+- Themes now appear as pandracula, pandracula colorful and pandracula alucub, each with an Islands version
+- Customized pandracula colors across the dark themes
+- Install and update notifications now introduce pandracula
+- Includes every improvement from Dracula for JetBrains 2.3.0
+
 ## 2.3.0
 
 - Alucard now colors Go, Python, Ruby, Objective-C, CSS, JavaScript, TypeScript, Kotlin, Markdown and regular expressions with the Alucard palette, instead of falling back to generic light-theme colors
