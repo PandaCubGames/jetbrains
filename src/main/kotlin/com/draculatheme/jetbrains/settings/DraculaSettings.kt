@@ -5,7 +5,7 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 
-@State(name = "DraculaSetting", storages = [Storage("dracula-theme.xml")])
+@State(name = "PandraculaSetting", storages = [Storage("pandracula.xml")])
 class DraculaSettings : PersistentStateComponent<DraculaState> {
     companion object {
         val instance: DraculaSettings

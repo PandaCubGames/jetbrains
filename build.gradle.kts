@@ -39,7 +39,7 @@ changelog {
 val pluginDescription = """
     <div>
       <p>
-        PandaCub Dracula is a fork of the Dracula theme for JetBrains IDEs,
+        pandracula is a fork of the Dracula theme for JetBrains IDEs,
         maintained by PandaCub Games. It provides customized theme colors and
         pandracula variants based on the original Dracula themes.
       </p>
