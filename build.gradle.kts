@@ -2,6 +2,7 @@ import org.jetbrains.changelog.Changelog
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -23,8 +24,11 @@ repositories {
 }
 
 dependencies {
+    testImplementation("junit:junit:4.13.2")
     intellijPlatform {
         create(properties("platformType"), properties("platformVersion"))
+        bundledPlugin("org.jetbrains.plugins.terminal")
+        testFramework(TestFrameworkType.Platform)
         // Plugin verifier for compatibility checks
         pluginVerifier()
     }

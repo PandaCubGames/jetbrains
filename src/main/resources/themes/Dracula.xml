@@ -1,4 +1,15 @@
 <scheme name="Pandracula" version="142" parent_scheme="Darcula">
+  <!-- IntelliJ reads integer font sizes: 24 / 1.25 restores 19.2 at 100% IDE scale.
+       FONT_SCALE must precede EDITOR_FONT_SIZE. -->
+  <option name="FONT_SCALE" value="1.25" />
+  <option name="EDITOR_FONT_SIZE" value="24" />
+  <option name="EDITOR_FONT_NAME" value="JetBrains Mono" />
+  <option name="LINE_SPACING" value="1.2" />
+  <option name="EDITOR_LIGATURES" value="false" />
+  <option name="CONSOLE_FONT_SIZE" value="24" />
+  <option name="CONSOLE_FONT_NAME" value="JetBrains Mono" />
+  <option name="CONSOLE_LINE_SPACING" value="1.2" />
+  <option name="CONSOLE_LIGATURES" value="false" />
   <colors>
     <option name="ADDED_LINES_COLOR" value="48b764" />
     <option name="ANNOTATIONS_COLOR" value="f8f8f2" />

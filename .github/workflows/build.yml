@@ -39,7 +39,7 @@ jobs:
       - name: Test upstream merge helper
         run: python3 -B -m unittest discover -s .github/scripts -p 'test_*.py' -v
       - name: Build and verify plugin
-        run: bash ./gradlew --no-daemon buildPlugin verifyPlugin
+        run: bash ./gradlew --no-daemon buildPlugin test verifyPlugin
       - uses: actions/upload-artifact@v7
         with:
           name: plugin-artifact
