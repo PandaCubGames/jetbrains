@@ -1,4 +1,4 @@
-<scheme name="pandracula colorful" version="142" parent_scheme="Darcula">
+<scheme name="Pandracula Colorful" version="142" parent_scheme="Darcula">
   <!-- IntelliJ reads integer font sizes: 24 / 1.25 restores 19.2 at 100% IDE scale.
        FONT_SCALE must precede EDITOR_FONT_SIZE. -->
   <option name="FONT_SCALE" value="1.25" />

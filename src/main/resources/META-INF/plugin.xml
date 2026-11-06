@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>pandacub.games.pandacub-dracula</id>
-    <name>PandaCub Dracula</name>
+    <name>pandracula</name>
     <vendor url="https://github.com/PandaCubGames/jetbrains">PandaCubGames</vendor>
     <depends>com.intellij.modules.lang</depends>
     <depends optional="true" config-file="pandracula-terminal.xml">org.jetbrains.plugins.terminal</depends>
@@ -8,7 +8,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.draculatheme.jetbrains.settings.DraculaSettings"/>
         <postStartupActivity implementation="com.draculatheme.jetbrains.activities.DraculaStartupActivity"/>
-        <notificationGroup displayType="STICKY_BALLOON" id="Dracula Theme" isLogByDefault="true"/>
+        <notificationGroup displayType="STICKY_BALLOON" id="pandracula" isLogByDefault="true"/>
         <themeProvider id="371dce76-a3c5-4429-91af-41cf86094744" path="/themes/Dracula.theme.json"/>
         <themeProvider id="ee2824b3-c1d9-44fa-8b64-de6fe5dd8e37" path="/themes/DraculaColorful.theme.json"/>
         <themeProvider id="f8c76d9a-2c8d-4e4f-a327-d7b5c1ce6d3e" path="/themes/DraculaAlucard.theme.json"/>

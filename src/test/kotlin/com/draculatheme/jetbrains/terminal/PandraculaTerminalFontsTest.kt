@@ -44,7 +44,7 @@ class PandraculaTerminalFontsTest : BasePlatformTestCase() {
     }
 
     fun testAppliesMatchingFontsOnceAndPreservesLaterTerminalEdits() {
-        selectScheme("_@user_pandracula")
+        selectScheme("_@user_Pandracula")
         fonts.requestApply()
         UIUtil.dispatchAllInvocationEvents()
 
@@ -58,7 +58,7 @@ class PandraculaTerminalFontsTest : BasePlatformTestCase() {
         assertTrue(fonts.state.applied)
 
         setTerminalSize(21f)
-        selectScheme("pandracula colorful")
+        selectScheme("Pandracula Colorful")
         fonts.requestApply()
         UIUtil.dispatchAllInvocationEvents()
         assertEquals(21f, terminal.fontPreferences.getSize2D("JetBrains Mono"), 0.001f)

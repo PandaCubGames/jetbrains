@@ -41,7 +41,7 @@ class PandraculaTerminalFonts : PersistentStateComponent<TerminalFontDefaultsSta
 
     private fun applyDefaults() {
         val schemeName = EditorColorsManager.getInstance().globalScheme.name.removePrefix("_@user_")
-        if (schemeName !in setOf("pandracula", "pandracula colorful", "pandracula alucub")) return
+        if (schemeName !in setOf("Pandracula", "Pandracula Colorful", "Pandracula Alucub")) return
 
         val preferences = FontPreferencesImpl().apply {
             register("JetBrains Mono", 19.2f * UISettings.defFontScale)
