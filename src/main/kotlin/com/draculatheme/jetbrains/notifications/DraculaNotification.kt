@@ -52,11 +52,8 @@ object DraculaNotification {
         <div style="${Styles.CONTAINER}">
             <h4 style="${Styles.HEADING}">✨ What's New</h4>
             <ul style="margin: 0; padding-left: 18px;">
-                <li style="${Styles.LIST_ITEM}">🎨 Alucard now colors Go, Python, Ruby, CSS, Markdown and more with its own palette</li>
-                <li style="${Styles.LIST_ITEM}">🎨 Cleaner punctuation coloring in Dracula — braces, brackets and operators finally match the theme</li>
-                <li style="${Styles.LIST_ITEM}">🎨 Readable toggle switches in Alucard and clearer plugin Update buttons</li>
-                <li style="${Styles.LIST_ITEM}">🎨 Islands Alucard now matches its dark counterparts</li>
-                <li style="${Styles.LIST_ITEM}">✨ Notifications show their intended styling on every theme</li>
+                <li style="${Styles.LIST_ITEM}">🎨 Themes are now named Pandracula, Pandracula Colorful and Pandracula Alucub</li>
+                <li style="${Styles.LIST_ITEM}">🏝️ Islands variants are labelled "Islands …", so every entry in the Theme list is easy to tell apart</li>
             </ul>
         </div>
     """.trimIndent()
@@ -65,7 +62,7 @@ object DraculaNotification {
     private fun releaseNote() = """
         <div style="${Styles.CONTAINER}">
             <p style="${Styles.PARAGRAPH}">
-                🎉 <strong>Welcome to Dracula Theme v${DraculaMeta.currentVersion}!</strong> Here's what's new in this release:
+                🎉 <strong>Welcome to pandracula v${DraculaMeta.currentVersion}!</strong> Here's what's new in this release:
             </p>
             ${whatsNew()}
             <div style="${Styles.INFO_BOX}">
@@ -83,7 +80,7 @@ object DraculaNotification {
     private fun welcomeMessage() = """
         <div style="${Styles.CONTAINER}">
             <p style="${Styles.PARAGRAPH}">
-                🎉 <strong>Welcome to the dark side!</strong> Dracula Theme is now installed and ready to transform your coding experience.
+                🎉 <strong>Welcome to the dark side!</strong> pandracula is now installed and ready to transform your coding experience.
             </p>
             <div style="${Styles.INFO_BOX}">
                 <p style="${Styles.INFO_TEXT}">
@@ -91,17 +88,17 @@ object DraculaNotification {
                 </p>
                 <ul style="margin: 8px 0 0 0; padding-left: 16px; color: ${css(Colors.TEXT_PRIMARY)}; font-size: 12px;">
                     <li style="margin: 4px 0;">Go to <span style="${Styles.HIGHLIGHT}">Settings → Appearance & Behavior → Appearance</span></li>
-                    <li style="margin: 4px 0;">Select <span style="${Styles.HIGHLIGHT}">Dracula</span> from the Theme dropdown</li>
+                    <li style="margin: 4px 0;">Select <span style="${Styles.HIGHLIGHT}">Pandracula</span> from the Theme dropdown</li>
                     <li style="margin: 4px 0;">Restart your IDE for the best experience</li>
                 </ul>
             </div>
             <p style="${Styles.SMALL_TEXT}">
-                Happy coding with Dracula! 🧛‍♂️
+                Happy coding with pandracula! 🧛‍♂️
             </p>
         </div>
     """.trimIndent()
 
-    private const val NOTIFICATION_GROUP_ID = "Dracula Theme"
+    private const val NOTIFICATION_GROUP_ID = "pandracula"
 
     private val notificationIcon = IconLoader.getIcon("/icons/pandracula-logo.svg", javaClass)
 
@@ -110,12 +107,12 @@ object DraculaNotification {
     private const val DONATE_LINK = "https://www.buymeacoffee.com/nszihan"
 
     fun notifyReleaseNote(project: Project) {
-        val title = "🎨 Dracula Theme v${DraculaMeta.currentVersion} - Release Notes"
+        val title = "🎨 pandracula v${DraculaMeta.currentVersion} - Release Notes"
         notify(project, title, releaseNote())
     }
 
     fun notifyFirstlyDownloaded(project: Project) {
-        val title = "🧛‍♂️ Dracula Theme Successfully Installed"
+        val title = "🧛‍♂️ pandracula Successfully Installed"
         notify(project, title, welcomeMessage())
     }
 

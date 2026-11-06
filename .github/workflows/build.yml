@@ -15,8 +15,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v7
+      - name: Read plugin version
+        id: version
+        run: |
+          version=$(sed -n 's/^pluginVersion=//p' gradle.properties | tr -d '[:space:]')
+          if [[ -z "$version" ]]; then echo 'pluginVersion missing from gradle.properties' >&2; exit 1; fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-java@v5
         with:
           java-version: '21'
@@ -41,7 +49,12 @@ jobs:
 
   release:
     needs: build
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    # A pluginVersion bump merged into the default branch publishes v<pluginVersion>
+    # automatically; pushing a v* tag still works, and manual runs make a build snapshot.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.ref, 'refs/tags/v') ||
+      (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -58,12 +71,22 @@ jobs:
           COMMIT: ${{ github.sha }}
           REF: ${{ github.ref }}
           REF_NAME: ${{ github.ref_name }}
+          EVENT: ${{ github.event_name }}
+          VERSION: ${{ needs.build.outputs.version }}
         run: |
-          tag="build-${COMMIT}"
-          if [[ "$REF" == refs/tags/v* ]]; then tag="$REF_NAME"; fi
+          if [[ "$REF" == refs/tags/v* ]]; then
+            tag="$REF_NAME"
+          elif [[ "$EVENT" == push ]]; then
+            tag="v${VERSION}"
+          else
+            tag="build-${COMMIT}"
+          fi
+          # Version releases drive the README badge; build snapshots must never become "latest".
+          latest=--latest
+          if [[ "$tag" == build-* ]]; then latest=--latest=false; fi
           if gh release view "$tag" >/dev/null 2>&1; then
             echo "Release $tag already exists."
           else
-            gh release create "$tag" dist/*.zip --target "$COMMIT" \
-              --title "Dracula fork — $tag" --generate-notes
+            gh release create "$tag" dist/*.zip --target "$COMMIT" "$latest" \
+              --title "pandracula — $tag" --generate-notes
           fi

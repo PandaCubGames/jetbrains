@@ -86,5 +86,5 @@ jobs:
         run: |
           commit=$(git rev-parse HEAD)
           tag="build-${commit}"
-          gh release create "$tag" build/distributions/*.zip --target "$commit" \
-            --title "Dracula fork — $tag" --generate-notes
+          gh release create "$tag" build/distributions/*.zip --target "$commit" --latest=false \
+            --title "pandracula — $tag" --generate-notes
