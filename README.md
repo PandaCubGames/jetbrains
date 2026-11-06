@@ -34,6 +34,18 @@ notes for the PandaCub branding changes.
 Each Islands variant uses the same editor color scheme as its classic counterpart:
 `Pandracula`, `Pandracula Colorful`, or `Pandracula Alucub`.
 
+All six themes use scheme-specific **JetBrains Mono**, size **19.2** at 100% IDE
+scale, line height **1.2**, and ligatures disabled, with no explicit fallback font.
+Font size follows the IDE's font scaling. Existing customized scheme copies can
+retain their saved settings; select a bundled scheme or reset its font settings
+to use these defaults.
+
+The console schemes use the same font settings. When the bundled Terminal plugin
+is enabled, selecting a Pandracula editor scheme also applies JetBrains Mono,
+size 19.2 at 100% IDE scale, line height 1.2, and ligatures disabled to the terminal
+once per IDE configuration. Later terminal font edits are preserved. The terminal
+integration is optional, and its column spacing is preserved.
+
 ## Development
 
 Use JDK 21 and the Gradle wrapper from the repository root. The build targets
@@ -42,6 +54,9 @@ IntelliJ IDEA 2025.3; the plugin descriptor requires IntelliJ platform build 253
 ```bash
 # Build the installable ZIP in build/distributions/
 ./gradlew buildPlugin
+
+# Test terminal font integration
+./gradlew test
 
 # Run plugin compatibility verification
 ./gradlew verifyPlugin

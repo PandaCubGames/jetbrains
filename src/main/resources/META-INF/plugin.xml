@@ -1,8 +1,9 @@
 <idea-plugin>
     <id>pandacub.games.pandacub-dracula</id>
     <name>pandracula</name>
-    <vendor url="https://github.com/PandaCubGames/jetbrains">PandaCub Games</vendor>
+    <vendor url="https://github.com/PandaCubGames/jetbrains">PandaCubGames</vendor>
     <depends>com.intellij.modules.lang</depends>
+    <depends optional="true" config-file="pandracula-terminal.xml">org.jetbrains.plugins.terminal</depends>
     <idea-version since-build="253"/>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.draculatheme.jetbrains.settings.DraculaSettings"/>
