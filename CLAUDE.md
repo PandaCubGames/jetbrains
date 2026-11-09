@@ -52,7 +52,9 @@ Islands variants share editor scheme XML with their base counterparts via the `e
 
 ### Release workflow
 
-Every push and PR runs `buildPlugin` then `verifyPlugin`. A push to `master`/`main` whose `pluginVersion` has no GitHub Release yet publishes `v<pluginVersion>` from the verified zip and marks it Latest (this drives the README release badge). Pushing a `v*` tag also releases. Manual workflow runs and upstream-sync builds publish `build-<sha>` snapshots that are never marked Latest.
+Every push and PR runs `buildPlugin` then `verifyPlugin`. A push to `master`/`main` whose `pluginVersion` has no GitHub Release yet publishes `v<pluginVersion>` from the verified zip and marks it Latest (this drives the README release badge). Pushing a `v*` tag also releases. Manual workflow runs publish `build-<sha>` snapshots that are never marked Latest.
+
+The daily upstream sync (`.github/workflows/sync-upstream.yml`) never pushes to `master`. When `dracula/jetbrains` has new commits it opens a PR from `upstream-sync/<sha>`: the colour-preserving merge from `.github/scripts/sync_upstream.py` when that succeeds, otherwise upstream's tip with the stop reason and manual-merge steps in the PR body.
 
 To release a new version:
 1. Update `pluginVersion` in `gradle.properties`
