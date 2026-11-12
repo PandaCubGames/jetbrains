@@ -316,11 +316,11 @@
   <action id="EditorSelectWord">
     <keyboard-shortcut first-keystroke="shift alt EQUALS" />
     <keyboard-shortcut first-keystroke="control alt RIGHT" />
+    <keyboard-shortcut first-keystroke="control W" />
   </action>
   <action id="EditorUnSelectWord">
     <keyboard-shortcut first-keystroke="shift alt MINUS" />
     <keyboard-shortcut first-keystroke="control alt LEFT" />
-    <keyboard-shortcut first-keystroke="control shift W" />
   </action>
   <action id="ChooseRunConfiguration">
     <keyboard-shortcut first-keystroke="control shift alt R" />
@@ -660,13 +660,13 @@
   <action id="ShowSearchHistory" />
   <action id="StartUnityAction">
     <keyboard-shortcut first-keystroke="shift ctrl u" />
-    <keyboard-shortcut first-keystroke="ctrl w" />
+    <keyboard-shortcut first-keystroke="shift ctrl w" />
   </action>
   <action id="UsageView.ShowRecentFindUsages" />
   <action id="StartGodotEditorAction">
-    <keyboard-shortcut first-keystroke="ctrl w" />
+    <keyboard-shortcut first-keystroke="shift ctrl w" />
   </action>
   <action id="StartEditorAction">
-    <keyboard-shortcut first-keystroke="ctrl w" />
+    <keyboard-shortcut first-keystroke="shift ctrl w" />
   </action>
 </keymap>

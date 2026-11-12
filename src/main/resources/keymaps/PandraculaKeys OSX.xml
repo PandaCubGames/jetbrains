@@ -548,12 +548,12 @@
     <keyboard-shortcut first-keystroke="ctrl w" />
   </action>
   <action id="StartUnityAction">
-    <keyboard-shortcut first-keystroke="ctrl w" />
+    <keyboard-shortcut first-keystroke="shift ctrl w" />
   </action>
   <action id="StartGodotEditorAction">
-    <keyboard-shortcut first-keystroke="ctrl w" />
+    <keyboard-shortcut first-keystroke="shift ctrl w" />
   </action>
   <action id="StartEditorAction">
-    <keyboard-shortcut first-keystroke="ctrl w" />
+    <keyboard-shortcut first-keystroke="shift ctrl w" />
   </action>
 </keymap>
