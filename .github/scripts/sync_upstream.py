@@ -1,4 +1,4 @@
-"""Merge upstream, retaining the fork's automation and six dark-theme colors."""
+"""Merge upstream, retaining the fork's own files and six dark-theme colors."""
 import json
 import os
 from pathlib import Path
@@ -13,6 +13,13 @@ TOKENS = ("primaryBackground", "hoverBackground", "selectionBackground",
           "selectionInactiveBackground", "borderColor", "separatorColor")
 AUTOMATION = (".github/workflows/build.yml", ".github/workflows/sync-upstream.yml",
               ".github/scripts/sync_upstream.py", ".github/scripts/test_sync_upstream.py")
+# Files where the fork's copy always wins, so upstream's version bumps, release
+# notes and notification text never replace the fork's or stop the merge. The
+# newest CHANGELOG.md section becomes the plugin's change notes, so upstream's
+# entries must not land above the fork's. Upstream edits to these files are
+# dropped: port anything wanted from them by hand.
+FORK_OWNED = ("CHANGELOG.md", "CLAUDE.md", "gradle.properties",
+              "src/main/kotlin/com/draculatheme/jetbrains/notifications/DraculaNotification.kt")
 
 
 def git(*args, check=True):
@@ -55,6 +62,12 @@ def moved_colors(ours_text, merged_text):
             if (value in TOKENS or merged.get(key) in TOKENS) and merged.get(key) != value]
 
 
+def upstream_edits_dropped(ref):
+    """Files the fork keeps as its own that upstream changed since the last sync."""
+    base = git("merge-base", "HEAD", ref).stdout.strip()
+    return git("diff", "--name-only", base, ref, "--", *AUTOMATION, *FORK_OWNED).stdout.split()
+
+
 def sync(ref):
     if git("status", "--porcelain").stdout.strip():
         raise RuntimeError("Sync requires a clean checkout")
@@ -65,7 +78,7 @@ def sync(ref):
         originals[path] = Path(path).read_text()
         colors = json.loads(originals[path])["colors"]
         palettes[path] = {key: colors[key] for key in TOKENS}
-    protected = [p for p in AUTOMATION if Path(p).exists()]
+    protected = [p for p in AUTOMATION + FORK_OWNED if Path(p).exists()]
     result = git("merge", "--no-commit", "--no-ff", ref, check=False)
     try:
         conflicts = git("diff", "--name-only", "--diff-filter=U").stdout.splitlines()
@@ -110,6 +123,10 @@ def sync(ref):
 
 
 if __name__ == "__main__":
+    # Reported before merging, so a stopped merge can still name these files.
+    if os.environ.get("GITHUB_OUTPUT"):
+        with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+            output.write(f"kept={' '.join(upstream_edits_dropped(sys.argv[1]))}\n")
     try:
         changed = sync(sys.argv[1])
     except RuntimeError as error:
