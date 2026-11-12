@@ -73,9 +73,11 @@ Report fork-specific problems in [this repository's issues](https://github.com/P
 **Sync upstream Dracula** checks `dracula/jetbrains`'s `master` branch daily at
 00:17 São Paulo time (03:17 UTC). When upstream has changes this fork lacks, it opens
 a pull request from an `upstream-sync/<upstream commit>` branch instead of changing the
-default branch. If the merge is clean, the PR holds the merged result with the six
-customized dark-theme color tokens and fork automation preserved, and the run builds
-and runs `verifyPlugin` on it. The fork's own `CHANGELOG.md`, `CLAUDE.md`,
+default branch. If the merge is clean, the PR holds the merged result with fork
+automation preserved, and the run builds and runs `verifyPlugin` on it. In the
+`*.theme.json` files, every field this fork has changed keeps the fork's value and
+everything else follows upstream; the sync works out which fields those are by itself,
+and the PR lists the ones upstream changed too. The fork's own `CHANGELOG.md`, `CLAUDE.md`,
 `gradle.properties` and `DraculaNotification.kt` are always kept as they are: upstream's
 edits to them are not taken, and the PR lists which of them upstream changed.
 If the merge conflicts, the PR points at upstream's
