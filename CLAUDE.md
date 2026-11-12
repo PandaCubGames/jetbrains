@@ -39,6 +39,15 @@ Each theme consists of two files in `src/main/resources/themes/`:
 
 Colors in `.theme.json` are first defined in the `colors` block as named tokens (e.g., `accentColor`), then referenced by name in `ui`. Hard-coded hex values are also allowed where the named palette doesn't apply.
 
+### Keymaps
+
+`src/main/resources/keymaps/` ships the **PandraculaKeys** keymap, registered with `bundledKeymap` in `plugin.xml`:
+
+- `PandraculaKeys.xml` — Windows/Linux, parent `$default`
+- `PandraculaKeys OSX.xml` — macOS, parent `Mac OS X 10.5+`; the IDE displays it as "PandraculaKeys (macOS)"
+
+The IDE takes the keymap name from the file name, so the file name and the `name` attribute must match. Each file inlines JetBrains' Visual Studio keymap (Apache 2.0, source noted in the header comment) plus the owner's changes, so it doesn't depend on the Visual Studio Keymap plugin being installed. Unknown action IDs (e.g. Rider-only Unity/Godot actions) are ignored in IDEs that don't have them.
+
 ### Kotlin source
 
 All source lives in `src/main/kotlin/com/draculatheme/jetbrains/`:
