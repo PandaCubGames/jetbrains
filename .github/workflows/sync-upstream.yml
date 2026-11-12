@@ -63,6 +63,9 @@ jobs:
       - name: Merge upstream and preserve fork customizations
         id: merge
         if: steps.check.outputs.needed == 'true'
+        env:
+          # The helper writes what a reviewer should check about the theme merge here.
+          SYNC_NOTES: ${{ runner.temp }}/sync-notes.md
         run: |
           if python3 .github/scripts/sync_upstream.py upstream/master 2> "$RUNNER_TEMP/merge.log"; then
             echo 'result=merged' >> "$GITHUB_OUTPUT"
@@ -127,8 +130,12 @@ jobs:
             {
               echo "## Merged automatically"
               echo
-              echo "The custom pandracula colors were kept."
+              echo "In the theme files, every field this fork has changed kept the fork's value and everything else follows upstream."
               echo
+              if [ -s "$RUNNER_TEMP/sync-notes.md" ]; then
+                cat "$RUNNER_TEMP/sync-notes.md"
+                echo
+              fi
               if [ -n "$KEPT" ]; then
                 echo "Upstream also changed these files, which this fork keeps as its own. Its edits to them were **not** taken, so port anything you want from them by hand:"
                 echo
@@ -165,7 +172,7 @@ jobs:
                 echo "# Keep this fork's own copies of the files it owns."
                 echo "git restore --source=HEAD --staged --worktree -- $KEPT"
               fi
-              echo "# Resolve the remaining conflicts, keeping the pandracula colors wherever upstream moved them."
+              echo "# Resolve the remaining conflicts. In theme files, keep the fields this fork has changed."
               echo "git add -u"
               echo "git commit --no-edit"
               echo "git push --force origin $BRANCH"
