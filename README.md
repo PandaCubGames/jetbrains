@@ -75,7 +75,10 @@ Report fork-specific problems in [this repository's issues](https://github.com/P
 a pull request from an `upstream-sync/<upstream commit>` branch instead of changing the
 default branch. If the merge is clean, the PR holds the merged result with the six
 customized dark-theme color tokens and fork automation preserved, and the run builds
-and runs `verifyPlugin` on it. If the merge conflicts, the PR points at upstream's
+and runs `verifyPlugin` on it. The fork's own `CHANGELOG.md`, `CLAUDE.md`,
+`gradle.properties` and `DraculaNotification.kt` are always kept as they are: upstream's
+edits to them are not taken, and the PR lists which of them upstream changed.
+If the merge conflicts, the PR points at upstream's
 `master` and its description explains why it stopped and how to resolve it by hand.
 Each upstream commit gets one PR; closing it unmerged skips that version until upstream
 moves on.

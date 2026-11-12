@@ -5,7 +5,10 @@ import subprocess
 import tempfile
 import unittest
 
-from sync_upstream import AUTOMATION, THEMES, TOKENS, sync
+from sync_upstream import AUTOMATION, FORK_OWNED, THEMES, TOKENS, sync, upstream_edits_dropped
+
+# Files where the fork's copy must survive whatever upstream does to them.
+KEPT = AUTOMATION + FORK_OWNED
 
 
 class SyncTest(unittest.TestCase):
@@ -23,7 +26,7 @@ class SyncTest(unittest.TestCase):
             Path(path).write_text(json.dumps({'colors': {k: '#000000' for k in TOKENS},
                                              'ui': {'other': 'base',
                                                     '*': {'background': 'primaryBackground'}}}, indent=2) + '\n')
-        for path in AUTOMATION:
+        for path in KEPT:
             Path(path).parent.mkdir(parents=True, exist_ok=True)
             Path(path).write_text('base\n')
         Path('other.txt').write_text('base\n')
@@ -31,8 +34,8 @@ class SyncTest(unittest.TestCase):
         self.git('branch', 'upstream')
         for path in THEMES:
             Path(path).write_text(Path(path).read_text().replace('#000000', '#111111'))
-        for path in AUTOMATION:
-            Path(path).write_text('fork automation\n')
+        for path in KEPT:
+            Path(path).write_text('fork copy\n')
         self.commit('fork customizations')
 
     def git(self, *args):
@@ -48,8 +51,8 @@ class SyncTest(unittest.TestCase):
         for path in THEMES:
             text = Path(path).read_text().replace('#000000', '#222222')
             Path(path).write_text(text.replace('"other": "base"', '"other": "upstream"'))
-        for path in AUTOMATION:
-            Path(path).write_text('upstream automation\n')
+        for path in KEPT:
+            Path(path).write_text('upstream copy\n')
         Path('other.txt').write_text('upstream\n')
         self.commit('upstream changes')
         self.git('checkout', 'fork')
@@ -57,18 +60,37 @@ class SyncTest(unittest.TestCase):
             Path('other.txt').write_text('fork\n')
             self.commit('unrelated local change')
 
-    def test_merge_preserves_colors_and_automation_but_imports_upstream(self):
+    def test_merge_preserves_colors_and_fork_files_but_imports_upstream(self):
         self.upstream_change()
+        self.assertEqual(sorted(upstream_edits_dropped('upstream')), sorted(KEPT))
         self.assertTrue(sync('upstream'))
+        self.assertEqual(upstream_edits_dropped('upstream'), [])
         for path in THEMES:
             data = json.loads(Path(path).read_text())
             self.assertEqual(set(data['colors'].values()), {'#111111'})
             self.assertEqual(data['ui']['other'], 'upstream')
-        for path in AUTOMATION:
-            self.assertEqual(Path(path).read_text(), 'fork automation\n')
+        for path in KEPT:
+            self.assertEqual(Path(path).read_text(), 'fork copy\n')
         self.assertEqual(Path('other.txt').read_text(), 'upstream\n')
         self.assertEqual(self.git('status', '--porcelain'), '')
         self.assertFalse(sync('upstream'))
+
+    def test_fork_owned_files_ignore_upstream_edits_without_a_conflict(self):
+        # No conflict here: git alone would take upstream's version bump and notes.
+        self.git('checkout', 'upstream')
+        for path in FORK_OWNED:
+            Path(path).write_text('base\nupstream release\n')
+        Path('other.txt').write_text('upstream\n')
+        self.commit('upstream release')
+        self.git('checkout', 'fork')
+        for path in FORK_OWNED:
+            Path(path).write_text('base\n')
+        self.commit('fork matches the common ancestor again')
+        self.assertTrue(sync('upstream'))
+        for path in FORK_OWNED:
+            self.assertEqual(Path(path).read_text(), 'base\n')
+        self.assertEqual(Path('other.txt').read_text(), 'upstream\n')
+        self.assertEqual(self.git('status', '--porcelain'), '')
 
     def test_unrelated_conflict_aborts_without_changing_head(self):
         self.upstream_change(conflict=True)
