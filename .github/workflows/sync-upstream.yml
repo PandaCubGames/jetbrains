@@ -1,5 +1,9 @@
 name: Sync upstream Dracula
 
+# Opens a pull request whenever dracula/jetbrains has changes this fork lacks.
+# The default branch is never changed directly: merging the PR is what lands the
+# update, and that push runs "Build and release plugin" as usual.
+
 on:
   schedule:
     - cron: '17 3 * * *'
@@ -19,8 +23,11 @@ jobs:
     timeout-minutes: 90
     permissions:
       contents: write
+      pull-requests: write
     env:
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
     steps:
       - name: Check out the fork's default branch
         uses: actions/checkout@v7
@@ -35,56 +42,148 @@ jobs:
           git fetch --no-tags upstream master
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-      - name: Merge upstream and preserve custom colors
-        id: merge
-        run: python3 .github/scripts/sync_upstream.py upstream/master
-      - name: Check whether this commit needs a release
-        id: release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
+      - name: Check for new upstream changes
+        id: check
         run: |
-          tag="build-$(git rev-parse HEAD)"
-          if gh release view "$tag" >/dev/null 2>&1; then
+          upstream=$(git rev-parse upstream/master)
+          branch="upstream-sync/${upstream:0:12}"
+          echo "upstream=$upstream" >> "$GITHUB_OUTPUT"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          if git merge-base --is-ancestor upstream/master HEAD; then
+            echo "Already up to date with upstream."
+            echo 'needed=false' >> "$GITHUB_OUTPUT"
+          elif git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
+            # One PR per upstream commit. If it was closed unmerged, wait for
+            # upstream to move on instead of reopening it every day.
+            echo "Branch $branch already exists; a PR for this upstream version was already opened."
             echo 'needed=false' >> "$GITHUB_OUTPUT"
           else
             echo 'needed=true' >> "$GITHUB_OUTPUT"
           fi
+      - name: Merge upstream and preserve fork customizations
+        id: merge
+        if: steps.check.outputs.needed == 'true'
+        env:
+          # The helper writes what a reviewer should check about the theme merge here.
+          SYNC_NOTES: ${{ runner.temp }}/sync-notes.md
+        run: |
+          if python3 .github/scripts/sync_upstream.py upstream/master 2> "$RUNNER_TEMP/merge.log"; then
+            echo 'result=merged' >> "$GITHUB_OUTPUT"
+          else
+            # The helper aborts its merge on failure, so the checkout is clean again.
+            cat "$RUNNER_TEMP/merge.log" >&2
+            awk '/^[A-Za-z_.]+(Error|Exception): /{found=1} found' "$RUNNER_TEMP/merge.log" > "$RUNNER_TEMP/reason.txt"
+            [ -s "$RUNNER_TEMP/reason.txt" ] || tail -n 20 "$RUNNER_TEMP/merge.log" > "$RUNNER_TEMP/reason.txt"
+            echo 'result=manual' >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-java@v5
-        if: steps.release.outputs.needed == 'true'
+        if: steps.merge.outputs.result == 'merged'
         with:
           java-version: '21'
           distribution: temurin
       - name: Free disk space for IntelliJ distributions
-        if: steps.release.outputs.needed == 'true'
+        if: steps.merge.outputs.result == 'merged'
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup
           sudo rm -rf /opt/hostedtoolcache/CodeQL
           df -h /
       - uses: gradle/actions/setup-gradle@v5
-        if: steps.release.outputs.needed == 'true'
-      # GITHUB_TOKEN pushes do not trigger push workflows. Validate and release
-      # here, before and after the push respectively.
+        if: steps.merge.outputs.result == 'merged'
+      # PRs opened with GITHUB_TOKEN do not trigger pull_request workflows, so
+      # verify the merge here and report the result in the PR.
       - name: Build and verify merged plugin
-        if: steps.release.outputs.needed == 'true'
+        id: build
+        if: steps.merge.outputs.result == 'merged'
+        continue-on-error: true
         run: bash ./gradlew --no-daemon buildPlugin test verifyPlugin
       - uses: actions/upload-artifact@v7
-        if: steps.release.outputs.needed == 'true'
+        if: steps.build.outcome == 'success'
         with:
           name: synced-plugin
           path: build/distributions/*.zip
           if-no-files-found: error
           retention-days: 30
-      - name: Update default branch
-        if: steps.merge.outputs.changed == 'true'
-        run: git push origin "HEAD:refs/heads/$DEFAULT_BRANCH"
-      - name: Release the verified build
-        if: steps.release.outputs.needed == 'true'
+      - name: Open pull request
+        if: steps.check.outputs.needed == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
+          UPSTREAM: ${{ steps.check.outputs.upstream }}
+          BRANCH: ${{ steps.check.outputs.branch }}
+          RESULT: ${{ steps.merge.outputs.result }}
+          # Files this fork keeps as its own that upstream changed (space-separated).
+          KEPT: ${{ steps.merge.outputs.kept }}
+          BUILD: ${{ steps.build.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          commit=$(git rev-parse HEAD)
-          tag="build-${commit}"
-          gh release create "$tag" build/distributions/*.zip --target "$commit" --latest=false \
-            --title "pandracula — $tag" --generate-notes
+          short=${UPSTREAM:0:12}
+          base=$(git merge-base "origin/$DEFAULT_BRANCH" upstream/master)
+          body="$RUNNER_TEMP/pr-body.md"
+          {
+            echo "Upstream [dracula/jetbrains](https://github.com/dracula/jetbrains/compare/$base...$UPSTREAM) has changes this fork does not have yet:"
+            echo
+            git log --no-merges --format='- %s (dracula/jetbrains@%h)' "origin/$DEFAULT_BRANCH..upstream/master" | head -n 50
+            echo
+          } > "$body"
+
+          if [ "$RESULT" = merged ]; then
+            git push origin "HEAD:refs/heads/$BRANCH"
+            title="Sync upstream Dracula ($short)"
+            {
+              echo "## Merged automatically"
+              echo
+              echo "In the theme files, every field this fork has changed kept the fork's value and everything else follows upstream."
+              echo
+              if [ -s "$RUNNER_TEMP/sync-notes.md" ]; then
+                cat "$RUNNER_TEMP/sync-notes.md"
+                echo
+              fi
+              if [ -n "$KEPT" ]; then
+                echo "Upstream also changed these files, which this fork keeps as its own. Its edits to them were **not** taken, so port anything you want from them by hand:"
+                echo
+                printf -- '- `%s`\n' $KEPT
+                echo
+              fi
+              if [ "$BUILD" = success ]; then
+                echo "The merged plugin built and passed \`verifyPlugin\` in [the sync run]($RUN_URL), which also has the plugin ZIP to try. Review the changes and merge when ready."
+              else
+                echo "> [!WARNING]"
+                echo "> The merged plugin **failed** to build or verify in [the sync run]($RUN_URL). Fix it on this branch before merging."
+              fi
+            } >> "$body"
+          else
+            # Nothing could be merged, so offer upstream as-is and resolve by hand.
+            git push origin "refs/remotes/upstream/master:refs/heads/$BRANCH"
+            title="Sync upstream Dracula ($short) — manual merge needed"
+            {
+              echo "## Manual merge needed"
+              echo
+              echo "The automatic merge stopped:"
+              echo
+              echo '```'
+              cat "$RUNNER_TEMP/reason.txt"
+              echo '```'
+              echo
+              echo "This branch currently points at upstream's \`master\`. To resolve it:"
+              echo
+              echo '```bash'
+              echo "git fetch origin"
+              echo "git switch -C $BRANCH origin/$DEFAULT_BRANCH"
+              echo "git merge origin/$BRANCH"
+              if [ -n "$KEPT" ]; then
+                echo "# Keep this fork's own copies of the files it owns."
+                echo "git restore --source=HEAD --staged --worktree -- $KEPT"
+              fi
+              echo "# Resolve the remaining conflicts. In theme files, keep the fields this fork has changed."
+              echo "git add -u"
+              echo "git commit --no-edit"
+              echo "git push --force origin $BRANCH"
+              echo '```'
+            } >> "$body"
+          fi
+
+          gh pr create --base "$DEFAULT_BRANCH" --head "$BRANCH" --title "$title" --body-file "$body"
+          echo "Opened a pull request: $title" >> "$GITHUB_STEP_SUMMARY"
+      - name: Fail if the merged plugin did not verify
+        if: steps.build.outcome == 'failure'
+        run: |
+          echo "The merged plugin failed to build or verify; see the pull request." >&2
+          exit 1

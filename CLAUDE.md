@@ -52,7 +52,9 @@ Islands variants share editor scheme XML with their base counterparts via the `e
 
 ### Release workflow
 
-Every push and PR runs `buildPlugin` then `verifyPlugin`. A push to `master`/`main` whose `pluginVersion` has no GitHub Release yet publishes `v<pluginVersion>` from the verified zip and marks it Latest (this drives the README release badge). Pushing a `v*` tag also releases. Manual workflow runs and upstream-sync builds publish `build-<sha>` snapshots that are never marked Latest.
+Every push and PR runs `buildPlugin` then `verifyPlugin`. A push to `master`/`main` whose `pluginVersion` has no GitHub Release yet publishes `v<pluginVersion>` from the verified zip and marks it Latest (this drives the README release badge). Pushing a `v*` tag also releases. Manual workflow runs publish `build-<sha>` snapshots that are never marked Latest.
+
+The daily upstream sync (`.github/workflows/sync-upstream.yml`) never pushes to `master`. When `dracula/jetbrains` has new commits it opens a PR from `upstream-sync/<sha>`: the merge from `.github/scripts/sync_upstream.py` when that succeeds, otherwise upstream's tip with the stop reason and manual-merge steps in the PR body. The merge always keeps the fork's copy of the workflow and sync-script files and of the files in the script's `FORK_OWNED` list (`CHANGELOG.md`, `CLAUDE.md`, `gradle.properties`, `DraculaNotification.kt`); upstream's edits to those are dropped and listed in the PR, so a change wanted from them (for example a new `platformVersion`) has to be ported by hand. In `*.theme.json` files the script keeps the fork's value for every field the fork has changed since the last upstream merge (found by comparison, so there is no list to maintain) and takes everything else from upstream. The PR lists customized fields upstream changed too, and settings where upstream changed its use of a customized color; the second kind changes where the fork's colors show up, so look at the built themes before merging.
 
 To release a new version:
 1. Update `pluginVersion` in `gradle.properties`
