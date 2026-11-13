@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+- Every Pandracula theme now comes with a matching editor font: JetBrains Mono at a comfortable size and line height, so code looks the same whichever variant you pick
+- The Run and Debug consoles use the same font as the editor
+- The terminal picks up the same font the first time you select a Pandracula theme; any terminal font you choose afterwards is left alone
+
 ## 1.0.1
 
 - Theme names are now Pandracula, Pandracula Colorful and Pandracula Alucub
