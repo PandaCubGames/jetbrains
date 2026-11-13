@@ -52,9 +52,9 @@ object DraculaNotification {
         <div style="${Styles.CONTAINER}">
             <h4 style="${Styles.HEADING}">✨ What's New</h4>
             <ul style="margin: 0; padding-left: 18px;">
-                <li style="${Styles.LIST_ITEM}">🔤 Every Pandracula theme now comes with a matching editor font, so code looks the same whichever variant you pick</li>
-                <li style="${Styles.LIST_ITEM}">🖥️ The Run and Debug consoles use the same font as the editor</li>
-                <li style="${Styles.LIST_ITEM}">⌨️ The terminal picks up the same font the first time you select a Pandracula theme, and keeps any font you choose afterwards</li>
+                <li style="${Styles.LIST_ITEM}">🛡️ Pandracula no longer changes the terminal font for you, which makes it more dependable across IDE updates</li>
+                <li style="${Styles.LIST_ITEM}">⌨️ To match the terminal to the editor, choose its font under Settings → Tools → Terminal</li>
+                <li style="${Styles.LIST_ITEM}">🔤 The editor and the Run and Debug consoles keep their matching font</li>
             </ul>
         </div>
     """.trimIndent()
