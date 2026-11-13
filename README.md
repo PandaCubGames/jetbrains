@@ -40,11 +40,9 @@ Font size follows the IDE's font scaling. Existing customized scheme copies can
 retain their saved settings; select a bundled scheme or reset its font settings
 to use these defaults.
 
-The console schemes use the same font settings. When the bundled Terminal plugin
-is enabled, selecting a Pandracula editor scheme also applies JetBrains Mono,
-size 19.2 at 100% IDE scale, line height 1.2, and ligatures disabled to the terminal
-once per IDE configuration. Later terminal font edits are preserved. The terminal
-integration is optional, and its column spacing is preserved.
+The console schemes use the same font settings. The terminal has its own font
+settings, which the plugin does not change: to match the editor, set them under
+**Settings → Tools → Terminal**.
 
 ## Development
 
@@ -54,9 +52,6 @@ IntelliJ IDEA 2025.3; the plugin descriptor requires IntelliJ platform build 253
 ```bash
 # Build the installable ZIP in build/distributions/
 ./gradlew buildPlugin
-
-# Test terminal font integration
-./gradlew test
 
 # Run plugin compatibility verification
 ./gradlew verifyPlugin
@@ -96,9 +91,14 @@ downloadable Actions artifacts.
 
 Enable GitHub Actions and scheduled workflows in the fork's **Actions** tab.
 The release and sync jobs request `contents: write` (and `pull-requests: write` for
-sync) for the built-in `GITHUB_TOKEN`; no personal token or JetBrains Marketplace token
-is needed. Enable **Settings → Actions → General → Allow GitHub Actions to create and
-approve pull requests** so the sync job can open its PRs. These workflows publish to GitHub Releases.
+sync) for the built-in `GITHUB_TOKEN`; no personal token is needed. Enable **Settings → Actions → General → Allow GitHub Actions to create and
+approve pull requests** so the sync job can open its PRs.
+
+The same push that creates a new `v<version>` release also uploads that verified ZIP to
+[JetBrains Marketplace](https://plugins.jetbrains.com/), using the `JETBRAINS_TOKEN` repository
+secret (a Marketplace token from **My Tokens**). Each version is uploaded once and appears on the
+Marketplace after JetBrains approves it. Without the secret the upload is skipped with a warning.
+If the upload fails, no GitHub release is created either, so re-running the workflow retries both.
 
 ## Credits
 
