@@ -71,11 +71,19 @@ Report fork-specific problems in [this repository's issues](https://github.com/P
 ## Automation and releases
 
 **Sync upstream Dracula** checks `dracula/jetbrains`'s `master` branch daily at
-00:17 São Paulo time (03:17 UTC). It merges updates into this fork's default branch,
-preserves the six customized dark-theme color tokens and fork automation, and
-builds and runs `verifyPlugin` before pushing. Conflicts outside those customizations
-stop the update for manual resolution. An initial run also builds a release when
-the fork is already up to date; failed release uploads can be retried by rerunning sync.
+00:17 São Paulo time (03:17 UTC). When upstream has changes this fork lacks, it opens
+a pull request from an `upstream-sync/<upstream commit>` branch instead of changing the
+default branch. If the merge is clean, the PR holds the merged result with fork
+automation preserved, and the run builds and runs `verifyPlugin` on it. In the
+`*.theme.json` files, every field this fork has changed keeps the fork's value and
+everything else follows upstream; the sync works out which fields those are by itself,
+and the PR lists the ones upstream changed too. The fork's own `CHANGELOG.md`, `CLAUDE.md`,
+`gradle.properties` and `DraculaNotification.kt` are always kept as they are: upstream's
+edits to them are not taken, and the PR lists which of them upstream changed.
+If the merge conflicts, the PR points at upstream's
+`master` and its description explains why it stopped and how to resolve it by hand.
+Each upstream commit gets one PR; closing it unmerged skips that version until upstream
+moves on.
 
 Verified ZIPs are attached to [Releases](https://github.com/PandaCubGames/jetbrains/releases)
 with a `build-<commit SHA>` tag. To create a download manually, open
@@ -87,9 +95,10 @@ Each release uses the ZIP from the verified build. Pull requests and ordinary pu
 downloadable Actions artifacts.
 
 Enable GitHub Actions and scheduled workflows in the fork's **Actions** tab.
-The release and sync jobs request `contents: write` for the built-in `GITHUB_TOKEN`;
-no personal token or JetBrains Marketplace token is needed. Repository rules must
-allow the sync job to push to the default branch. These workflows publish to GitHub Releases.
+The release and sync jobs request `contents: write` (and `pull-requests: write` for
+sync) for the built-in `GITHUB_TOKEN`; no personal token or JetBrains Marketplace token
+is needed. Enable **Settings → Actions → General → Allow GitHub Actions to create and
+approve pull requests** so the sync job can open its PRs. These workflows publish to GitHub Releases.
 
 ## Credits
 
