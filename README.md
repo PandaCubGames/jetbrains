@@ -96,9 +96,14 @@ downloadable Actions artifacts.
 
 Enable GitHub Actions and scheduled workflows in the fork's **Actions** tab.
 The release and sync jobs request `contents: write` (and `pull-requests: write` for
-sync) for the built-in `GITHUB_TOKEN`; no personal token or JetBrains Marketplace token
-is needed. Enable **Settings → Actions → General → Allow GitHub Actions to create and
-approve pull requests** so the sync job can open its PRs. These workflows publish to GitHub Releases.
+sync) for the built-in `GITHUB_TOKEN`; no personal token is needed. Enable **Settings → Actions → General → Allow GitHub Actions to create and
+approve pull requests** so the sync job can open its PRs.
+
+The same push that creates a new `v<version>` release also uploads that verified ZIP to
+[JetBrains Marketplace](https://plugins.jetbrains.com/), using the `JETBRAINS_TOKEN` repository
+secret (a Marketplace token from **My Tokens**). Each version is uploaded once and appears on the
+Marketplace after JetBrains approves it. Without the secret the upload is skipped with a warning.
+If the upload fails, no GitHub release is created either, so re-running the workflow retries both.
 
 ## Credits
 
