@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+- Pandracula no longer changes the terminal font for you, which makes the plugin more dependable across IDE updates. A terminal font it already set stays as it is
+- To match the terminal to the editor, choose its font under Settings → Tools → Terminal
+- The editor and the Run and Debug consoles keep their matching font
+
 ## 1.1.0
 
 - Every Pandracula theme now comes with a matching editor font: JetBrains Mono at a comfortable size and line height, so code looks the same whichever variant you pick

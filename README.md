@@ -40,11 +40,9 @@ Font size follows the IDE's font scaling. Existing customized scheme copies can
 retain their saved settings; select a bundled scheme or reset its font settings
 to use these defaults.
 
-The console schemes use the same font settings. When the bundled Terminal plugin
-is enabled, selecting a Pandracula editor scheme also applies JetBrains Mono,
-size 19.2 at 100% IDE scale, line height 1.2, and ligatures disabled to the terminal
-once per IDE configuration. Later terminal font edits are preserved. The terminal
-integration is optional, and its column spacing is preserved.
+The console schemes use the same font settings. The terminal has its own font
+settings, which the plugin does not change: to match the editor, set them under
+**Settings → Tools → Terminal**.
 
 ## Development
 
@@ -54,9 +52,6 @@ IntelliJ IDEA 2025.3; the plugin descriptor requires IntelliJ platform build 253
 ```bash
 # Build the installable ZIP in build/distributions/
 ./gradlew buildPlugin
-
-# Test terminal font integration
-./gradlew test
 
 # Run plugin compatibility verification
 ./gradlew verifyPlugin
