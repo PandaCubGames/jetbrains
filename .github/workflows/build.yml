@@ -46,6 +46,42 @@ jobs:
           path: build/distributions/*.zip
           if-no-files-found: error
           retention-days: 30
+      # A version goes to the Marketplace once: on the push that first introduces it, which is
+      # the same push the release job below turns into a new v<version> GitHub Release.
+      - name: Check whether this version is new
+        id: marketplace
+        if: >-
+          github.event_name == 'push' &&
+          (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          REF: ${{ github.ref }}
+          REF_NAME: ${{ github.ref_name }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          tag="v${VERSION}"
+          if [[ "$REF" == refs/tags/v* ]]; then tag="$REF_NAME"; fi
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; not publishing to the Marketplace again."
+            echo 'publish=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'publish=true' >> "$GITHUB_OUTPUT"
+          fi
+      # Uploads the ZIP built and verified above (Gradle reuses it; nothing is rebuilt).
+      # A failure here stops the GitHub Release too, so re-running the workflow retries both.
+      - name: Publish to JetBrains Marketplace
+        if: steps.marketplace.outputs.publish == 'true'
+        env:
+          JETBRAINS_TOKEN: ${{ secrets.JETBRAINS_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if [[ -z "$JETBRAINS_TOKEN" ]]; then
+            echo "::warning::JETBRAINS_TOKEN secret is not set; skipping the Marketplace upload of $VERSION."
+            exit 0
+          fi
+          bash ./gradlew --no-daemon publishPlugin
+          echo "Uploaded pandracula $VERSION to JetBrains Marketplace; it appears there after JetBrains approves it." >> "$GITHUB_STEP_SUMMARY"
 
   release:
     needs: build
