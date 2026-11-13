@@ -12,6 +12,7 @@
     "hoverBackground": "#282a36",
     "selectionBackground": "#6272a4",
     "selectionInactiveBackground": "#4e5a82",
+    "controlBorderColor": "#4b506a",
     "borderColor": "#282a36",
     "separatorColor": "#5d5e66",
     "editorBackground": "#282a36"
@@ -19,16 +20,18 @@
   "ui": {
     "*": {
       "arc": "7",
-      "background": "primaryBackground",
+      "background": "secondaryBackground",
       "foreground": "primaryForeground",
       "textForeground": "primaryForeground",
       "caretForeground": "primaryForeground",
       "selectionForeground": "primaryForeground",
+      "selectionForegroundInactive": "primaryForeground",
       "selectionInactiveForeground": "primaryForeground",
       "selectionBackground": "selectionBackground",
+      "selectionBackgroundInactive": "selectionInactiveBackground",
       "selectionInactiveBackground": "selectionInactiveBackground",
-      "inactiveBackground": "primaryBackground",
-      "disabledBackground": "primaryBackground",
+      "inactiveBackground": "secondaryBackground",
+      "disabledBackground": "secondaryBackground",
       "borderColor": "borderColor",
       "separatorColor": "separatorColor"
     },
@@ -58,8 +61,8 @@
     },
     "Button": {
       "foreground": "primaryForeground",
-      "startBorderColor": "selectionBackground",
-      "endBorderColor": "selectionBackground",
+      "startBorderColor": "controlBorderColor",
+      "endBorderColor": "controlBorderColor",
       "startBackground": "#565b75",
       "endBackground": "#565b75",
       "focusedBorderColor": "secondaryAccentColor",
@@ -89,7 +92,7 @@
         "disabledIconColor": "#576285",
         "iconColor": "secondaryAccentColor"
       },
-      "selectionBackground": "secondaryAccentColor",
+      "selectionBackground": "selectionBackground",
       "nonEditableBackground": "secondaryBackground"
     },
     "CompletionPopup": {
@@ -99,9 +102,9 @@
     },
     "Component": {
       "focusColor": "secondaryAccentColor",
-      "borderColor": "selectionBackground",
+      "borderColor": "controlBorderColor",
       "focusedBorderColor": "secondaryAccentColor",
-      "disabledBorderColor": "selectionBackground",
+      "disabledBorderColor": "controlBorderColor",
       "errorFocusColor": "#ff5554",
       "inactiveErrorFocusColor": "#a64a50",
       "warningFocusColor": "#f1fa8c",
@@ -134,8 +137,8 @@
     "List": {
       "selectionBackground": "selectionBackground",
       "selectionInactiveBackground": "selectionInactiveBackground",
-      "hoverBackground": "selectionInactiveBackground",
-      "hoverInactiveBackground": "selectionInactiveBackground"
+      "hoverBackground": "hoverBackground",
+      "hoverInactiveBackground": "hoverBackground"
     },
     "Link": {
       "activeForeground": "accentColor",
@@ -148,19 +151,19 @@
       "allocatedBackground": "#515872"
     },
     "Notification": {
-      "borderColor": "selectionBackground",
+      "borderColor": "controlBorderColor",
       "errorBorderColor": "#ff5554",
-      "errorBackground": "primaryBackground",
+      "errorBackground": "secondaryBackground",
       "errorForeground": "primaryForeground",
       "ToolWindow": {
         "warningForeground": "primaryForeground",
-        "warningBackground": "primaryBackground",
+        "warningBackground": "secondaryBackground",
         "warningBorderColor": "#ffb86c",
         "errorForeground": "primaryForeground",
         "errorBorderColor": "#ff5554",
-        "errorBackground": "primaryBackground",
+        "errorBackground": "secondaryBackground",
         "informativeForeground": "primaryForeground",
-        "informativeBackground": "primaryBackground",
+        "informativeBackground": "secondaryBackground",
         "informativeBorderColor": "#50fa7b"
       }
     },
@@ -188,10 +191,10 @@
       "Button": {
         "installBorderColor": "secondaryAccentColor",
         "installForeground": "secondaryAccentColor",
-        "installBackground": "primaryBackground",
+        "installBackground": "secondaryBackground",
         "installFillForeground": "primaryBackground",
         "installFillBackground": "secondaryAccentColor",
-        "installFocusedBackground": "primaryBackground",
+        "installFocusedBackground": "secondaryBackground",
         "updateBorderColor": "#5da3f4",
         "updateForeground": "primaryBackground",
         "updateBackground": "#5da3f4"
@@ -205,7 +208,7 @@
     "ProgressBar": {
       "failedColor": "#ff5554",
       "failedEndColor": "#ff5554",
-      "trackColor": "selectionBackground",
+      "trackColor": "controlBorderColor",
       "progressColor": "accentColor",
       "indeterminateStartColor": "#93b8f9",
       "indeterminateEndColor": "secondaryAccentColor",
@@ -243,7 +246,7 @@
       "separatorColor": "separatorColor"
     },
     "SidePanel": {
-      "background": "primaryBackground"
+      "background": "secondaryBackground"
     },
     "TabbedPane": {
       "tabSelectionHeight": 1,
@@ -278,7 +281,7 @@
         "hoverBackground": "hoverBackground"
       },
       "Header": {
-        "background": "primaryBackground",
+        "background": "secondaryBackground",
         "inactiveBackground": "secondaryBackground"
       },
       "HeaderTab": {
@@ -293,8 +296,8 @@
       "modifiedItemForeground": "accentColor",
       "selectionBackground": "selectionBackground",
       "selectionInactiveBackground": "selectionInactiveBackground",
-      "hoverBackground": "selectionInactiveBackground",
-      "hoverInactiveBackground": "selectionInactiveBackground",
+      "hoverBackground": "hoverBackground",
+      "hoverInactiveBackground": "hoverBackground",
       "hash": "hoverBackground"
     },
     "ValidationTooltip": {
@@ -316,7 +319,7 @@
       },
       "Log": {
         "Commit": {
-          "hoveredBackground": "selectionBackground",
+          "hoveredBackground": "hoverBackground",
           "currentBranchBackground": "#2e3040"
         }
       },
@@ -325,7 +328,7 @@
       }
     },
     "MainWindow.Tab": {
-      "background": "primaryBackground",
+      "background": "secondaryBackground",
       "foreground": "primaryForeground",
       "selectedBackground": "#484c60",
       "selectedForeground": "primaryForeground",
@@ -341,8 +344,8 @@
       "separatorColor": "separatorColor",
       "Projects": {
         "background": "hoverBackground",
-        "selectionBackground": "secondaryBackground",
-        "selectionInactiveBackground": "secondaryBackground",
+        "selectionBackground": "selectionBackground",
+        "selectionInactiveBackground": "selectionInactiveBackground",
         "actions": {
           "background": "secondaryBackground"
         }
