@@ -52,9 +52,9 @@ object DraculaNotification {
         <div style="${Styles.CONTAINER}">
             <h4 style="${Styles.HEADING}">✨ What's New</h4>
             <ul style="margin: 0; padding-left: 18px;">
-                <li style="${Styles.LIST_ITEM}">🛡️ Pandracula no longer changes the terminal font for you, which makes it more dependable across IDE updates</li>
-                <li style="${Styles.LIST_ITEM}">⌨️ To match the terminal to the editor, choose its font under Settings → Tools → Terminal</li>
-                <li style="${Styles.LIST_ITEM}">🔤 The editor and the Run and Debug consoles keep their matching font</li>
+                <li style="${Styles.LIST_ITEM}">⌨️ New <strong>PandraculaKeys</strong> keymap: Visual Studio shortcuts with a few Pandracula tweaks. Pick it under Settings → Keymap</li>
+                <li style="${Styles.LIST_ITEM}">↕️ Alt+Up and Alt+Down move the current line on Windows and Linux</li>
+                <li style="${Styles.LIST_ITEM}">🎮 Ctrl+Shift+W (⌃⇧W on a Mac) starts the Unity or Godot editor from Rider</li>
             </ul>
         </div>
     """.trimIndent()
