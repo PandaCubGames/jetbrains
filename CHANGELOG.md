@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1
+
+- Error and warning outlines on fields stay bright red and yellow when the IDE window isn't focused, so problems are still easy to spot (Pandracula and Pandracula Colorful)
+- Selected items in a panel you've clicked away from keep the Pandracula selection color in newer IDE versions (Pandracula and Pandracula Colorful)
+- The IDE's new terminal now uses Pandracula colors in every theme, and Pandracula Alucub gets terminal colors of its own
+- Includes the latest improvements from Dracula for JetBrains
+
 ## 1.2.0
 
 - New PandraculaKeys keymap: Visual Studio shortcuts with a few Pandracula tweaks. Choose it under Settings → Keymap, as "PandraculaKeys" on Windows and Linux or "PandraculaKeys (macOS)" on a Mac
