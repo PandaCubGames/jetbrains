@@ -6,6 +6,8 @@
 - Alt+Up and Alt+Down move the current line up or down on Windows and Linux
 - Ctrl+Shift+W (⌃⇧W on a Mac) starts the Unity or Godot editor from Rider
 - Works in every JetBrains IDE, even ones without the Visual Studio keymap installed
+- Pandracula and Pandracula Colorful: error and warning outlines stay bright red and yellow when the IDE window isn't focused, so problems are still easy to spot
+- Pandracula and Pandracula Colorful: selected items in a panel you've clicked away from keep the Pandracula selection color in newer IDE versions
 
 ## 1.1.1
 

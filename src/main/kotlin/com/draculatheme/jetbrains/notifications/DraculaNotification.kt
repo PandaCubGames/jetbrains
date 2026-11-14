@@ -55,6 +55,7 @@ object DraculaNotification {
                 <li style="${Styles.LIST_ITEM}">⌨️ New <strong>PandraculaKeys</strong> keymap: Visual Studio shortcuts with a few Pandracula tweaks. Pick it under Settings → Keymap</li>
                 <li style="${Styles.LIST_ITEM}">↕️ Alt+Up and Alt+Down move the current line on Windows and Linux</li>
                 <li style="${Styles.LIST_ITEM}">🎮 Ctrl+Shift+W (⌃⇧W on a Mac) starts the Unity or Godot editor from Rider</li>
+                <li style="${Styles.LIST_ITEM}">🎨 Clearer error and warning outlines, and steadier selection colors, in Pandracula and Pandracula Colorful</li>
             </ul>
         </div>
     """.trimIndent()

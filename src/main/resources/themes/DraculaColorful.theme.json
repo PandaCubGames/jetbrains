@@ -24,8 +24,10 @@
       "textForeground": "primaryForeground",
       "caretForeground": "primaryForeground",
       "selectionForeground": "primaryForeground",
+      "selectionForegroundInactive": "primaryForeground",
       "selectionInactiveForeground": "primaryForeground",
       "selectionBackground": "selectionBackground",
+      "selectionBackgroundInactive": "selectionInactiveBackground",
       "selectionInactiveBackground": "selectionInactiveBackground",
       "inactiveBackground": "primaryBackground",
       "disabledBackground": "primaryBackground",
@@ -103,9 +105,9 @@
       "focusedBorderColor": "secondaryAccentColor",
       "disabledBorderColor": "selectionBackground",
       "errorFocusColor": "#ff5554",
-      "inactiveErrorFocusColor": "#a64a50",
+      "inactiveErrorFocusColor": "#ff5554",
       "warningFocusColor": "#f1fa8c",
-      "inactiveWarningFocusColor": "#9fa56f"
+      "inactiveWarningFocusColor": "#f1fa8c"
     },
     "DragAndDrop": {
       "borderColor": "selectionBackground"
