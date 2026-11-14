@@ -11,9 +11,10 @@ AUTOMATION = (".github/workflows/build.yml", ".github/workflows/sync-upstream.ym
 # Files where the fork's copy always wins, so upstream's version bumps, release
 # notes and notification text never replace the fork's or stop the merge. The
 # newest CHANGELOG.md section becomes the plugin's change notes, so upstream's
-# entries must not land above the fork's. Upstream edits to these files are
+# entries must not land above the fork's, and the contributor guides describe
+# the fork, not upstream. Upstream edits to these files are
 # dropped: port anything wanted from them by hand.
-FORK_OWNED = ("CHANGELOG.md", "CLAUDE.md", "gradle.properties",
+FORK_OWNED = ("AGENTS.md", "CHANGELOG.md", "CLAUDE.md", "gradle.properties",
               "src/main/kotlin/com/draculatheme/jetbrains/notifications/DraculaNotification.kt")
 MISSING = object()
 
