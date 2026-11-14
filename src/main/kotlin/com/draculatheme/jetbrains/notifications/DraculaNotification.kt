@@ -52,8 +52,9 @@ object DraculaNotification {
         <div style="${Styles.CONTAINER}">
             <h4 style="${Styles.HEADING}">✨ What's New</h4>
             <ul style="margin: 0; padding-left: 18px;">
-                <li style="${Styles.LIST_ITEM}">🎨 Themes are now named Pandracula, Pandracula Colorful and Pandracula Alucub</li>
-                <li style="${Styles.LIST_ITEM}">🏝️ Islands variants are labelled "Islands …", so every entry in the Theme list is easy to tell apart</li>
+                <li style="${Styles.LIST_ITEM}">🛡️ Pandracula no longer changes the terminal font for you, which makes it more dependable across IDE updates</li>
+                <li style="${Styles.LIST_ITEM}">⌨️ To match the terminal to the editor, choose its font under Settings → Tools → Terminal</li>
+                <li style="${Styles.LIST_ITEM}">🔤 The editor and the Run and Debug consoles keep their matching font</li>
             </ul>
         </div>
     """.trimIndent()
