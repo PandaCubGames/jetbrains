@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0
+
+- New PandraculaKeys keymap: Visual Studio shortcuts with a few Pandracula tweaks. Choose it under Settings → Keymap, as "PandraculaKeys" on Windows and Linux or "PandraculaKeys (macOS)" on a Mac
+- Alt+Up and Alt+Down move the current line up or down on Windows and Linux
+- Ctrl+Shift+W (⌃⇧W on a Mac) starts the Unity or Godot editor from Rider
+- Works in every JetBrains IDE, even ones without the Visual Studio keymap installed
+
 ## 1.1.1
 
 - Pandracula no longer changes the terminal font for you, which makes the plugin more dependable across IDE updates. A terminal font it already set stays as it is
