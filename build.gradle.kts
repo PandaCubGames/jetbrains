@@ -28,6 +28,7 @@ dependencies {
         // Plugin verifier for compatibility checks
         pluginVerifier()
     }
+    testImplementation("junit:junit:4.13.2")
 }
 
 changelog {

@@ -72,6 +72,11 @@ All source lives in `src/main/kotlin/com/draculatheme/jetbrains/`:
 - **`settings/DraculaSettings.kt` + `DraculaState.kt`** — persistent app-level settings (currently stores the last-seen version to detect upgrades). `exchangeVersion` is the only writer and is atomic, because the caller runs once per open project
 - **`activities/DraculaStartupActivity.kt`** — runs on project open; compares stored version to current, fires install or upgrade notification
 - **`notifications/DraculaNotification.kt`** — renders styled HTML notifications for first install and version upgrades
+- **`fontscaling/`** — Smart Font Scaling, an opt-in feature (off by default) under Settings → Appearance & Behavior → Appearance → Pandracula:
+  - `FontSizeCalculator.kt` — pure functions: `calculateFontSize` (reference size × reference scale ÷ display scale, clamped), `effectiveDisplayScale` and `parseXftDpi`
+  - `SmartFontScalingService.kt` — sets the size on each open code editor as a per-editor override (the mechanism Ctrl+wheel zoom uses), so the color scheme and the user's font settings are never written and disabling restores them. It only manages editors whose size is the IDE default or the size it set itself; re-applies on editor creation, scheme/UI settings changes, and when an editor's monitor or the desktop scaling changes. Display scale is the runtime's per-monitor scale, or on X11 the desktop font DPI ÷ 96 when that is larger (X11 runtimes only scale by whole numbers)
+  - `SmartFontScalingEditorListener.kt` — forwards editor creation/release to the service
+- **`settings/SmartFontScalingSettings.kt` + `SmartFontScalingConfigurable.kt`** — the feature's preferences, stored in `pandracula-font-scaling.xml` with roaming disabled (per IDE installation, not carried by Settings Sync), and its settings page
 
 ## Coding Style
 
@@ -82,7 +87,7 @@ All source lives in `src/main/kotlin/com/draculatheme/jetbrains/`:
 
 ## Testing
 
-There is no test suite for the plugin. Validation is `./gradlew verifyPlugin` (which CI runs on every push and PR) plus manual checks in `./gradlew runIde`. The upstream sync script has its own tests: `python3 -m unittest discover -s .github/scripts`.
+`./gradlew test` runs the unit tests in `src/test/kotlin`, which cover only the pure font-scaling functions. Everything else is validated by `./gradlew verifyPlugin` (CI runs both on every push and PR) plus manual checks in `./gradlew runIde`. The upstream sync script has its own tests: `python3 -m unittest discover -s .github/scripts`.
 
 - Run `./gradlew verifyPlugin` before opening a PR.
 - Validate theme changes in `./gradlew runIde` across multiple file types/languages.
