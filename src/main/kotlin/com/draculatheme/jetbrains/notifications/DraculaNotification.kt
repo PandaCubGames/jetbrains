@@ -52,9 +52,7 @@ object DraculaNotification {
         <div style="${Styles.CONTAINER}">
             <h4 style="${Styles.HEADING}">✨ What's New</h4>
             <ul style="margin: 0; padding-left: 18px;">
-                <li style="${Styles.LIST_ITEM}">🚨 Error and warning outlines stay bright when the IDE window isn't focused, so problems are still easy to spot</li>
-                <li style="${Styles.LIST_ITEM}">🎯 In newer IDE versions, selected items keep the Pandracula selection color after you click away from their panel</li>
-                <li style="${Styles.LIST_ITEM}">🖥️ The new terminal uses Pandracula colors in every theme, including Pandracula Alucub</li>
+                <li style="${Styles.LIST_ITEM}">⌨️ PandraculaKeys: Shift+Alt+Up and Shift+Alt+Down extend a selection across lines on Windows and Linux, so you can edit a column of text from the keyboard</li>
             </ul>
         </div>
     """.trimIndent()
