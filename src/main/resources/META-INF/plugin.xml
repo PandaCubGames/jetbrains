@@ -6,6 +6,10 @@
     <idea-version since-build="253"/>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.draculatheme.jetbrains.settings.DraculaSettings"/>
+        <applicationService serviceImplementation="com.draculatheme.jetbrains.settings.SmartFontScalingSettings"/>
+        <applicationConfigurable parentId="appearance" id="pandacub.games.pandracula.settings" displayName="Pandracula"
+                                 instance="com.draculatheme.jetbrains.settings.SmartFontScalingConfigurable"/>
+        <editorFactoryListener implementation="com.draculatheme.jetbrains.fontscaling.SmartFontScalingEditorListener"/>
         <postStartupActivity implementation="com.draculatheme.jetbrains.activities.DraculaStartupActivity"/>
         <notificationGroup displayType="STICKY_BALLOON" id="pandracula" isLogByDefault="true"/>
         <themeProvider id="371dce76-a3c5-4429-91af-41cf86094744" path="/themes/Dracula.theme.json"/>
