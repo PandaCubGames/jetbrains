@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2
+
+- PandraculaKeys: Shift+Alt+Up and Shift+Alt+Down now extend a selection onto the lines above or below on Windows and Linux, so you can select and edit a column of text across several lines from the keyboard
+
 ## 1.2.1
 
 - Error and warning outlines on fields stay bright red and yellow when the IDE window isn't focused, so problems are still easy to spot (Pandracula and Pandracula Colorful)
