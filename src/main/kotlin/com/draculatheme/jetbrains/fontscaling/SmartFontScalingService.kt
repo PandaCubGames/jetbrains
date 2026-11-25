@@ -2,8 +2,6 @@ package com.draculatheme.jetbrains.fontscaling
 
 import com.draculatheme.jetbrains.settings.SmartFontScalingSettings
 import com.draculatheme.jetbrains.settings.SmartFontScalingState
-import com.intellij.execution.configurations.GeneralCommandLine
-import com.intellij.execution.util.ExecUtil
 import com.intellij.ide.ui.UISettings
 import com.intellij.ide.ui.UISettingsListener
 import com.intellij.ide.ui.UISettingsUtils
@@ -19,11 +17,8 @@ import com.intellij.openapi.editor.colors.EditorColorsListener
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.util.Key
-import com.intellij.openapi.util.SystemInfo
 import com.intellij.ui.scale.JBUIScale
 import java.awt.Component
-import java.awt.GraphicsEnvironment
-import java.awt.Toolkit
 import java.beans.PropertyChangeListener
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
@@ -53,10 +48,6 @@ class SmartFontScalingService : Disposable {
         private val APPLIED_SIZE = Key.create<Float>("pandracula.smartFontScaling.appliedSize")
         private val LISTENER = Key.create<PropertyChangeListener>("pandracula.smartFontScaling.listener")
 
-        // The desktop's font DPI in 1/1024ths. The runtime publishes it on X11 when the desktop
-        // runs a settings daemon that announces it.
-        private const val XFT_DPI_PROPERTY = "gnome.Xft/DPI"
-        private const val XRDB_TIMEOUT_MS = 3000
         private const val GRAPHICS_CONFIGURATION_PROPERTY = "graphicsConfiguration"
 
         private fun same(a: Float, b: Float) = abs(a - b) < 0.01f
@@ -71,56 +62,26 @@ class SmartFontScalingService : Disposable {
     }
 
     private val refreshQueued = AtomicBoolean()
-    private val desktopListener = PropertyChangeListener { scheduleRefresh() }
 
     // With "update on monitor change" off, the scale is read once and kept for the session.
     @Volatile
     private var pinnedScale: Float? = null
 
-    // Font DPI from the X resource database, for desktops that set Xft.dpi without announcing it.
-    @Volatile
-    private var xrdbDpi: Float? = null
-    private val xrdbQueried = AtomicBoolean()
-
-    /** The display scaling for the monitor showing [component], or for the main monitor. */
+    /**
+     * The scale the IDE draws with on the monitor showing [component], or on the main monitor.
+     *
+     * This is deliberately not the desktop's scaling setting. On Windows, macOS and Wayland the
+     * two are the same, but on X11 the runtime only scales by whole numbers: a desktop at 125%
+     * is drawn at 1.0, so a font size of 19 really is 19 pixels there while 16 on Windows at 125%
+     * is 20. What the text ends up looking like depends on the drawing scale alone.
+     */
     fun displayScale(component: Component? = null): Float =
-        effectiveDisplayScale(JBUIScale.sysScale(component), fontDpi())
-
-    private fun fontDpi(): Float? {
-        if (!SystemInfo.isLinux || GraphicsEnvironment.isHeadless()) return null
-        val toolkit = Toolkit.getDefaultToolkit()
-        // Wayland reports fractional scaling through the runtime scale; X resources don't apply.
-        if (!toolkit.javaClass.name.contains("XToolkit")) return null
-        val announced = runCatching { toolkit.getDesktopProperty(XFT_DPI_PROPERTY) }.getOrNull() as? Number
-        if (announced != null) return announced.toFloat() / 1024f
-        queryXrdb()
-        return xrdbDpi
-    }
-
-    /** Runs `xrdb -query` once, off the UI thread, and refreshes the editors if it found a DPI. */
-    private fun queryXrdb() {
-        if (!xrdbQueried.compareAndSet(false, true)) return
-        ApplicationManager.getApplication().executeOnPooledThread {
-            val dpi = runCatching {
-                ExecUtil.execAndGetOutput(GeneralCommandLine("xrdb", "-query"), XRDB_TIMEOUT_MS)
-                    .takeIf { it.exitCode == 0 && !it.isTimeout }
-                    ?.let { parseXftDpi(it.stdout) }
-            }.getOrNull()
-            if (dpi != xrdbDpi) {
-                xrdbDpi = dpi
-                pinnedScale = null
-                scheduleRefresh()
-            }
-        }
-    }
+        JBUIScale.sysScale(component).takeIf { it > 0f && it.isFinite() } ?: 1f
 
     init {
         val connection = ApplicationManager.getApplication().messageBus.connect(this)
         connection.subscribe(EditorColorsManager.TOPIC, EditorColorsListener { scheduleRefresh() })
         connection.subscribe(UISettingsListener.TOPIC, UISettingsListener { scheduleRefresh() })
-        if (!GraphicsEnvironment.isHeadless()) {
-            Toolkit.getDefaultToolkit().addPropertyChangeListener(XFT_DPI_PROPERTY, desktopListener)
-        }
         // Editors opened before this service existed (the plugin was installed without a restart).
         EditorFactory.getInstance().allEditors.forEach(::track)
         scheduleRefresh()
@@ -138,7 +99,6 @@ class SmartFontScalingService : Disposable {
     /** Call after the settings were changed: re-reads the display and updates every editor. */
     fun settingsChanged() {
         pinnedScale = null
-        xrdbQueried.set(false)
         scheduleRefresh()
     }
 
@@ -222,9 +182,6 @@ class SmartFontScalingService : Disposable {
     }
 
     override fun dispose() {
-        if (!GraphicsEnvironment.isHeadless()) {
-            Toolkit.getDefaultToolkit().removePropertyChangeListener(XFT_DPI_PROPERTY, desktopListener)
-        }
         val app = ApplicationManager.getApplication()
         if (app.isDisposed) return
         // The plugin is being unloaded while the IDE keeps running: hand the editors back.

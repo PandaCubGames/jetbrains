@@ -25,7 +25,7 @@ class SmartFontScalingConfigurable : BoundConfigurable("Pandracula") {
                     .bindSelected({ draft.enabled }, { draft.enabled = it })
                     .comment(
                         "Picks the editor font size from the reference below, so code looks the same " +
-                            "size on displays with different scaling. Your own font settings are not " +
+                            "size wherever the IDE draws at a different scale. Your own font settings are not " +
                             "changed and come back when you turn this off."
                     )
             }
@@ -34,7 +34,7 @@ class SmartFontScalingConfigurable : BoundConfigurable("Pandracula") {
                     spinner(SmartFontScalingState.FONT_SIZE_RANGE)
                         .bindIntValue({ draft.referenceFontSize }, { draft.referenceFontSize = it })
                 }
-                row("Reference display scaling:") {
+                row("Reference display scale:") {
                     spinner(50.0..400.0, 0.25)
                         .bindValue({ draft.referenceScalePercent.toDouble() }, { draft.referenceScalePercent = it.toFloat() })
                         .gap(RightGap.SMALL)
@@ -49,7 +49,7 @@ class SmartFontScalingConfigurable : BoundConfigurable("Pandracula") {
                         .bindIntValue({ draft.maxFontSize }, { draft.maxFontSize = it })
                 }
                 row {
-                    checkBox("Update when the display scaling changes or the window moves to another monitor")
+                    checkBox("Update when the display scale changes or the window moves to another monitor")
                         .bindSelected({ draft.updateOnMonitorChange }, { draft.updateOnMonitorChange = it })
                 }
             }.enabledIf(enabled.selected)
@@ -63,7 +63,8 @@ class SmartFontScalingConfigurable : BoundConfigurable("Pandracula") {
         val scale = SmartFontScalingService.instance.displayScale()
         val percent = String.format(Locale.ROOT, "%.2f", scale * 100).trimEnd('0').trimEnd('.')
         val size = SmartFontScalingService.fontSizeFor(scale, SmartFontScalingSettings.instance.snapshot())
-        return "Main display detected at $percent% scaling, which gives font size $size with the saved settings."
+        return "The IDE draws the main display at $percent% scale, which gives font size $size with the saved settings. " +
+            "On Linux with X11 this can be lower than the scaling set in the desktop."
     }
 
     override fun reset() {
